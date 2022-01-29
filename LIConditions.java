@@ -1,4 +1,5 @@
 import java.util.*;
+
 public final class LIConditions {
 
     private final int NUM_CONDITIONS = 15;
@@ -71,11 +72,24 @@ public final class LIConditions {
      * @return LIC 0
      */
     private boolean LIC_0() {
-        boolean LIC_0 = false;
+        // Check for faulty parameters
+        if (NUM_POINTS != X_COORDINATES.length || NUM_POINTS != Y_COORDINATES.length || parameter.getLENGTH1() <= 0) {
+            return false;
+        }
 
-        // TODO
+        double distPowTwo = 0; 
+        double lengthPowTwo = Math.pow(parameter.getLENGTH1(), 2);
+        for (int i = 0; i < NUM_POINTS-1; i++) {
 
-        return LIC_0;
+            // Calculate Euclidean distance
+            distPowTwo = Math.pow(X_COORDINATES[i]-X_COORDINATES[i+1], 2)
+                            +Math.pow(Y_COORDINATES[i]-Y_COORDINATES[i+1], 2);
+            if (distPowTwo > lengthPowTwo) {
+                return true;
+            }
+
+        }
+        return false;
     }
 
     /**

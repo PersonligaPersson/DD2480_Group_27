@@ -128,7 +128,6 @@ public final class LIConditions {
             return false;
         }
 
-        int numQuads = 0;
         Set<Integer> quads = new HashSet<Integer> ();
         for (int i = 0; i < NUM_POINTS - parameter.getQ_PTS(); i++) {
             
@@ -149,9 +148,8 @@ public final class LIConditions {
                     quads.add(3);
                 }
             }
-            numQuads = quads.size();
 
-            if (numQuads > parameter.getQUADS()) {
+            if (quads.size() > parameter.getQUADS()) {
                 return true;
             }
         }

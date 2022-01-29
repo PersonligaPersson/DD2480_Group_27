@@ -1,3 +1,4 @@
+import java.util.*;
 
 public final class LIConditions {
 
@@ -136,11 +137,38 @@ public final class LIConditions {
      * @return LIC 4
      */
     private boolean LIC_4() {
-        boolean LIC_4 = false;
+        // Check for faulty parameters
+        if (parameter.getQ_PTS() < 2 || parameter.getQ_PTS() > NUM_POINTS || parameter.getQUADS() < 1 || parameter.getQUADS() > 3) {
+            return false;
+        }
 
-        // TODO
+        Set<Integer> quads = new HashSet<Integer> ();
+        for (int i = 0; i < NUM_POINTS - parameter.getQ_PTS(); i++) {
+            
+            // Calculate the number of quads from the set of points
+            quads.clear();
+            for (int j = i; j < i + parameter.getQ_PTS(); j++) {
+                if (X_COORDINATES[j] >= 0 && Y_COORDINATES[j] >= 0) {
+                    // First quadrant
+                    quads.add(0);
+                } else if (X_COORDINATES[j] < 0 && Y_COORDINATES[j] >= 0) {
+                    // Second quadrant
+                    quads.add(1);
+                } else if (X_COORDINATES[j] <= 0 && Y_COORDINATES[j] < 0) {
+                    // Third quadrant
+                    quads.add(2);
+                } else {
+                    // Fourth quadrant
+                    quads.add(3);
+                }
+            }
 
-        return LIC_4;
+            if (quads.size() > parameter.getQUADS()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

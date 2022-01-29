@@ -174,11 +174,41 @@ public final class LIConditions {
      * @return LIC 8
      */
     private boolean LIC_8() {
-        boolean LIC_8 = false;
 
-        // TODO
+        // Check for faulty parameters
+        int aPts = parameter.getA_PTS();
+        int bPts = parameter.getB_PTS();
+        if (NUM_POINTS < 5 || aPts + bPts > NUM_POINTS-3 || aPts < 1 || bPts < 1) {
+            return false;
+        }
 
-        return LIC_8;
+        // Determine whether the three points fit in a circle of radius RADIUS1
+        double radiusPow2 = Math.pow(parameter.getRADIUS1(), 2);
+        double centerX = 0;
+        double centerY = 0;
+        double dist1 = 0;
+        double dist2 = 0;
+        double dist3 = 0;
+        for (int i = 0; i < NUM_POINTS - 2 - aPts - bPts; i++) {
+            // Determine the center coordinate of the circle
+            centerX = (X_COORDINATES[i] + X_COORDINATES[i+aPts+1] + X_COORDINATES[i+aPts+bPts+2])/3;
+            centerY = (Y_COORDINATES[i] + Y_COORDINATES[i+aPts+1] + Y_COORDINATES[i+aPts+bPts+2])/3;
+            
+            dist1 = distPowTwo(X_COORDINATES[i], Y_COORDINATES[i], centerX, centerY);
+            dist2 = distPowTwo(X_COORDINATES[i+aPts+1], Y_COORDINATES[i+aPts+1], centerX, centerY);
+            dist3 = distPowTwo(X_COORDINATES[i+aPts+bPts+2], Y_COORDINATES[i+aPts+bPts+2], centerX, centerY);
+            if (dist1 <= radiusPow2 && dist2 <= radiusPow2 && dist3 <= radiusPow2) {
+                // The points fit in the circle
+                continue;
+            }
+            return true;
+        }
+
+        return false;
+    }
+
+    private double distPowTwo(double x1, double y1, double x2, double y2) {
+        return Math.pow(x1-x2, 2) + Math.pow(y1-y2, 2);
     }
 
     /**

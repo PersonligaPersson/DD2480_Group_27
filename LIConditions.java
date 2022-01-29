@@ -77,12 +77,13 @@ public final class LIConditions {
         }
 
         double distPowTwo = 0; 
+        double lengthPowTwo = Math.pow(parameter.getLENGTH1(), 2);
         for (int i = 0; i < NUM_POINTS-1; i++) {
 
             // Calculate Euclidean distance
             distPowTwo = Math.pow(X_COORDINATES[i]-X_COORDINATES[i+1], 2)
                             +Math.pow(Y_COORDINATES[i]-Y_COORDINATES[i+1], 2);
-            if (distPowTwo > Math.pow(parameter.getLENGTH1(), 2)) {
+            if (distPowTwo > lengthPowTwo) {
                 return true;
             }
 

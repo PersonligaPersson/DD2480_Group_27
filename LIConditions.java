@@ -71,23 +71,21 @@ public final class LIConditions {
      * @return LIC 0
      */
     private boolean LIC_0() {
-        // Check for faulty input
+        // Check for faulty parameters
         if (NUM_POINTS != X_COORDINATES.length || NUM_POINTS != Y_COORDINATES.length || parameter.getLENGTH1() <= 0) {
             return false;
         }
 
-        double dist = 0; 
-        for (int i = 0; i < NUM_POINTS; i++) {
-            for (int j = 0; j < NUM_POINTS; j++) {
+        double distPowTwo = 0; 
+        for (int i = 0; i < NUM_POINTS-1; i++) {
 
-                // Calculate Euclidean distance
-                dist = Math.sqrt(Math.pow(X_COORDINATES[i]-X_COORDINATES[j], 2)
-                                +Math.pow(Y_COORDINATES[i]-Y_COORDINATES[j], 2));
-                if (dist > parameter.getLENGTH1()) {
-                    return true;
-                }
-
+            // Calculate Euclidean distance
+            distPowTwo = Math.pow(X_COORDINATES[i]-X_COORDINATES[i+1], 2)
+                            +Math.pow(Y_COORDINATES[i]-Y_COORDINATES[i+1], 2);
+            if (distPowTwo > Math.pow(parameter.getLENGTH1(), 2)) {
+                return true;
             }
+
         }
         return false;
     }

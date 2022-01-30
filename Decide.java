@@ -19,7 +19,7 @@ public final class Decide {
     // Final Unlocking Vector
     private boolean[] FUV;
 
-    private final int NUM_CONDITIONS = 15;
+    private static final int NUM_CONDITIONS = 15;
 
     public static void main(String[] args) {
 
@@ -58,12 +58,17 @@ public final class Decide {
      *
      * @return the decision
      */
-    private boolean decideLaunch() {
-        boolean launch = false;
+    public static boolean decideLaunch(boolean[] FUV) {
 
-        // TODO
+        for (int i = 0; i < NUM_CONDITIONS; ++i) {
+            // check the value
+            if (!FUV[i]) {
+                return false;
+            }
+        }
 
-        return launch;
+        // return true iff all value in FUV are true
+        return true;
     }
 
 }

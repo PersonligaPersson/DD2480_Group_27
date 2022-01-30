@@ -1,3 +1,5 @@
+package DD2480_Group_27;
+
 public final class Parameter {
 
     // parameters

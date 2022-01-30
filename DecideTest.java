@@ -1,8 +1,10 @@
+package DD2480_Group_27;
+
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class DecideTest {
+class DecideTest {    
 
     @Test
     void hasToReturnFalse() {

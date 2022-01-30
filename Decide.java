@@ -16,10 +16,12 @@ public final class Decide {
     private boolean[][] PUM;
     // Conditions Met Vector
     private boolean[] CMV;
+    // Preliminary Unlocking Vector
+    private boolean[] PUV;
     // Final Unlocking Vector
     private boolean[] FUV;
 
-    private final int NUM_CONDITIONS = 15;
+    private static final int NUM_CONDITIONS = 15;
 
     public static void main(String[] args) {
 
@@ -41,16 +43,41 @@ public final class Decide {
     }
 
     /**
+     * Check that all values are true
+     *
+     * @param array the boolean array
+     * @return true if all values are true
+     */
+    private static boolean forAllTrue(boolean[] array) {
+        for (boolean b : array) {
+            if (!b) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * Compute the FUV
      *
      * @return the FUV
      */
-    private boolean[] computeFUV() {
-        boolean[] temp = new boolean[NUM_CONDITIONS];
+    public static boolean[] computeFUV(boolean[][] PUM, boolean[] PUV) {
 
-        // TODO
+        final int LEN = PUV.length;
 
-        return temp;
+        boolean[] FUV = new boolean[LEN];
+
+        for (int i = 0; i < LEN; ++i) {
+            // PUV[i] is true iff PUV[i] is false or all values in PUM[i] are true
+            if (!PUV[i]) {
+                FUV[i] = true;
+            } else {
+                FUV[i] = forAllTrue(PUM[i]);
+            }
+        }
+
+        return FUV;
     }
 
     /**

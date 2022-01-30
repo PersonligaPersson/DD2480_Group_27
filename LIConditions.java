@@ -268,11 +268,31 @@ public final class LIConditions {
      * @return LIC 12
      */
     private boolean LIC_12() {
-        boolean LIC_12 = false;
+        // Check for faulty parameters
+        if (NUM_POINTS < 3 || parameter.getLENGTH1() < 0 || parameter.getLENGTH2() < 0) {
+            return false;
+        }
 
-        // TODO
+        double len1PowTwo = Math.pow(parameter.getLENGTH1(), 2);
+        double len2PowTwo = Math.pow(parameter.getLENGTH2(), 2);
+        int kPts = parameter.getK_PTS();
+        boolean req1 = false;
+        boolean req2 = false;
+        double distPowTwo = 0;
+        for (int i = 0; i < NUM_POINTS - kPts - 1; i++) {
+            distPowTwo = Math.pow(X_COORDINATES[i]-X_COORDINATES[i+kPts+1], 2)+Math.pow(Y_COORDINATES[i]-Y_COORDINATES[i+kPts+1], 2);
 
-        return LIC_12;
+            if (distPowTwo > len1PowTwo) {
+                req1 = true;
+            }
+            if (distPowTwo < len2PowTwo) {
+                req2 = true;
+            }
+            if (req1 && req2) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

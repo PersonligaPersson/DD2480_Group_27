@@ -85,12 +85,17 @@ public final class Decide {
      *
      * @return the decision
      */
-    private boolean decideLaunch() {
-        boolean launch = false;
+    public static boolean decideLaunch(boolean[] FUV) {
 
-        // TODO
+        for (int i = 0; i < NUM_CONDITIONS; ++i) {
+            // check the value
+            if (!FUV[i]) {
+                return false;
+            }
+        }
 
-        return launch;
+        // return true iff all value in FUV are true
+        return true;
     }
 
 }

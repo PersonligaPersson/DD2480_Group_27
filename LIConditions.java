@@ -205,11 +205,22 @@ public final class LIConditions {
      * @return LIC 7
      */
     private boolean LIC_7() {
-        boolean LIC_7 = false;
+        int kPTS = parameter.getK_PTS();
+        double len1Squared = Math.pow(parameter.getLENGTH1(), 2);
 
-        // TODO
+        if (NUM_POINTS < 3 || kPTS < 1 || kPTS > NUM_POINTS - 2) {
+            return false;
+        }
 
-        return LIC_7;
+        for (int i = 0; i < NUM_POINTS - (kPTS + 1); i++) {
+            double distSquared = Math.pow(X_COORDINATES[i] - X_COORDINATES[i + kPTS + 1], 2)
+                    + Math.pow(Y_COORDINATES[i] - Y_COORDINATES[i + kPTS + 1], 2);
+
+            if (distSquared > len1Squared) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

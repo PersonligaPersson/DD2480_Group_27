@@ -22,11 +22,23 @@ public class Lic12Test {
     */
     @Test
     void lic12NegativeTest() {
-        Parameter parameter = new Parameter(3, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0);
-        double[] x = {0, 0, 1, 1, 0};
-        double[] y = {0, 1, 0, 0, 2};
+
+        // Every pair of points, separated by K_PTS points, are more than LENGTH1 and LENGTH2 units apart (only first requirement fulfilled)
+        Parameter parameter = new Parameter(1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0);
+        double[] x = {0, 1, 2, 3, 4};
+        double[] y = {0, 0, 0, 0, 0};
         int numPoints = 5;
         LIConditions lic = new LIConditions(parameter, x, y, numPoints);
+        assertFalse(lic.computeAndGetConditions()[12]);
+
+        // Every pair of points, separated by K_PTS points, are less than LENGTH1 and LENGTH2 units apart (only second requirement fulfilled)
+        parameter = new Parameter(3, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0);
+        lic = new LIConditions(parameter, x, y, numPoints);
+        assertFalse(lic.computeAndGetConditions()[12]);
+
+        // Every pair of points, separated by K_PTS points, are less than LENGTH1 units apart and more than LENGTH2 units apart (neither requirement fulfilled)
+        parameter = new Parameter(3, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0);
+        lic = new LIConditions(parameter, x, y, numPoints);
         assertFalse(lic.computeAndGetConditions()[12]);
     }
 

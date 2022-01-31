@@ -52,6 +52,19 @@ public final class LIConditions {
     }
     
     /**
+     * Computes the euclidian distance to the power of two between two points in a plane.
+     * 
+     * @param x1 x-coordinate of the first point
+     * @param x2 x-coordinate of the second point
+     * @param y1 y-coordinate of the first point
+     * @param y2 y-coordinate of the second point
+     * @return
+     */
+    private double distancePowTwo(double x1, double x2, double y1, double y2){
+        return Math.pow(x2-x1,2) + Math.pow(y2-y1,2);
+    }
+
+    /**
      * Computes the euclidian distance between two points in a plane.
      * 
      * @param x1 x-coordinate of the first point
@@ -61,7 +74,7 @@ public final class LIConditions {
      * @return
      */
     private double distance(double x1, double x2, double y1, double y2){
-        return Math.pow(x2-x1,2) + Math.pow(y2-y1,2);
+        return Math.sqrt(Math.pow(x2-x1,2) + Math.pow(y2-y1,2));
     }
 
     /**
@@ -109,7 +122,7 @@ public final class LIConditions {
         // Compute the distance between the three points.            
         double dist_p1p2 = distance(x1, x2, y1, y2);
         double dist_p2p3 = distance(x2, x3, y2, y3);
-        double dist_p3p1 = distance(x3, x1, y3, y1);        
+        double dist_p3p1 = distance(x3, x1, y3, y1);                
 
         // Then check if any of the points are further away from each other than the circle's diameter. This would make it impossible to contain them in a circle.
         if(dist_p1p2 > diameter || dist_p2p3 > diameter || dist_p3p1 > diameter)
@@ -133,7 +146,8 @@ public final class LIConditions {
         }
 
         // At this point the remaining coordinate has to be at most the radius of the circle away from the centerpoint in order to be able to fit.
-        if(distance(center_cords[0], remaining_point[0], center_cords[1], remaining_point[1]) <= diameter/2)
+        final double center_dist = distance(center_cords[0], remaining_point[0], center_cords[1], remaining_point[1]);
+        if(center_dist <= diameter/2)
             return true;
 
         return false;
@@ -178,7 +192,7 @@ public final class LIConditions {
             // }
 
             // Refactored to using the euclidian distance helper function.
-            distPowTwo = distance(X_COORDINATES[i], X_COORDINATES[i+1], Y_COORDINATES[i], Y_COORDINATES[i+1]);
+            distPowTwo = distancePowTwo(X_COORDINATES[i], X_COORDINATES[i+1], Y_COORDINATES[i], Y_COORDINATES[i+1]);
             if(distPowTwo > lengthPowTwo){
                 return true;
             }

@@ -1,3 +1,5 @@
+package DD2480_Group_27;
+
 public final class Decide {
 
     // Final launch decision
@@ -16,6 +18,8 @@ public final class Decide {
     private boolean[][] PUM;
     // Conditions Met Vector
     private boolean[] CMV;
+    // Preliminary Unlocking Vector
+    private boolean[] PUV;
     // Final Unlocking Vector
     private boolean[] FUV;
 
@@ -65,16 +69,41 @@ public final class Decide {
     }
 
     /**
+     * Check that all values are true
+     *
+     * @param array the boolean array
+     * @return true if all values are true
+     */
+    private static boolean forAllTrue(boolean[] array) {
+        for (boolean b : array) {
+            if (!b) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * Compute the FUV
      *
      * @return the FUV
      */
-    private boolean[] computeFUV() {
-        boolean[] temp = new boolean[NUM_CONDITIONS];
+    public static boolean[] computeFUV(boolean[][] PUM, boolean[] PUV) {
 
-        // TODO
+        final int LEN = PUV.length;
 
-        return temp;
+        boolean[] FUV = new boolean[LEN];
+
+        for (int i = 0; i < LEN; ++i) {
+            // PUV[i] is true iff PUV[i] is false or all values in PUM[i] are true
+            if (!PUV[i]) {
+                FUV[i] = true;
+            } else {
+                FUV[i] = forAllTrue(PUM[i]);
+            }
+        }
+
+        return FUV;
     }
 
     /**
@@ -82,12 +111,17 @@ public final class Decide {
      *
      * @return the decision
      */
-    private boolean decideLaunch() {
-        boolean launch = false;
+    public static boolean decideLaunch(boolean[] FUV) {
 
-        // TODO
+        for (int i = 0; i < NUM_CONDITIONS; ++i) {
+            // check the value
+            if (!FUV[i]) {
+                return false;
+            }
+        }
 
-        return launch;
+        // return true iff all value in FUV are true
+        return true;
     }
 
 }

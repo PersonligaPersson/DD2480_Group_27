@@ -177,11 +177,13 @@ public final class LIConditions {
      * @return LIC 5
      */
     private boolean LIC_5() {
-        boolean LIC_5 = false;
+        for (int i = 0; i < NUM_POINTS-1; i++) {
+            if (X_COORDINATES[i] > X_COORDINATES[i+1]) {
+                return true;
+            }
+        }
 
-        // TODO
-
-        return LIC_5;
+        return false;
     }
 
     /**

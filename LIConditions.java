@@ -301,7 +301,17 @@ public final class LIConditions {
     private boolean LIC_3() {
         boolean LIC_3 = false;
 
-        // TODO
+        // Start by checking for faulty input.
+
+        // Then iterate over all points...
+
+        // Find the distance between all points.
+
+        // Find the centerpoint between two of them.
+
+        // Compute the area of the circle.
+
+        // Check the area condition.
 
         return LIC_3;
     }

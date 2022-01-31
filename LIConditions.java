@@ -65,6 +65,23 @@ public final class LIConditions {
     }
 
     /**
+     * This function checks if a set of points intersects.
+     * O(n^2) because each point is compared with all other points.
+     * @param coordinates
+     * @return
+     */
+    private boolean doesIntersect(double[][] coordinates){
+        for(int i=0; i<coordinates.length-1; i++){
+            for(int j=i+1; j<coordinates.length; j++){
+                if(coordinates[i][0] == coordinates[i+1][0] && coordinates[i][1] == coordinates[i+1][1]){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
      * Computes the euclidian distance between two points in a plane.
      * 
      * @param x1 x-coordinate of the first point
@@ -236,8 +253,43 @@ public final class LIConditions {
     private boolean LIC_2() {
         boolean LIC_2 = false;
 
-        // TODO
+        // Get the epsilon parameter.
+        double epsilon = parameter.getEPSILON();
 
+        // Start by checking for faulty input.
+        if (NUM_POINTS != X_COORDINATES.length || NUM_POINTS != Y_COORDINATES.length || epsilon > Math.PI || epsilon < 0) {
+            return false;
+        }
+        
+        // Then iterate over all points and...
+        for(int i=0; i < NUM_POINTS-2; i++){
+            // Check if the points are a potentially valid combination.
+            double[][] points = new double[3][];
+            points[0][0] = X_COORDINATES[i];
+            points[0][1] = Y_COORDINATES[i];
+            points[1][0] = X_COORDINATES[i+1]; // The second point is the potential vertex of the triangle.
+            points[1][1] = Y_COORDINATES[i+1];
+            points[2][0] = X_COORDINATES[i+2];
+            points[2][1] = Y_COORDINATES[i+2];
+            if(doesIntersect(points)){ continue; } // If the current set of points are not valid, skip to the next pass.
+
+            // If the points are valid, compute the angle between them.
+            // We achieve this by using the cosine rule b^2 = a^2 + c^2 - 2ac*cos(B) where B is the angle at the vertex and b is the opposing side. 
+            // Rearranged this gives the forumla B = arccos((a^2 + c^2 - b^2) / 2ac)
+            // In this case the opposing side will always be a line between points 1 and 3.
+            double a = distance(points[0][0], points[1][0], points[0][1], points[1][1]);
+            double b = distance(points[0][0], points[2][0], points[0][1], points[2][1]);
+            double c = distance(points[2][0], points[1][0], points[2][1], points[1][1]);
+            
+            double expr = (Math.pow(a, 2) + Math.pow(c, 2) - Math.pow(b, 2)) / (2*a*c);
+            double B = Math.acos(expr);
+
+            // Now we're checking the angle conditions.
+            if(B < (Math.PI-epsilon)){ LIC_2 = true; }
+            if(B > (Math.PI+epsilon)){ LIC_2 = true; }
+        }        
+
+        // Lastly return the result.
         return LIC_2;
     }
 

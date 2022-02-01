@@ -281,12 +281,12 @@ public final class LIConditions {
         for(int i=0; i < NUM_POINTS-2; i++){
             // Check if the points are a potentially valid combination.
             double[][] points = new double[3][];
-            points[0][0] = X_COORDINATES[i];
-            points[0][1] = Y_COORDINATES[i];
-            points[1][0] = X_COORDINATES[i+1]; // The second point is the potential vertex of the triangle.
-            points[1][1] = Y_COORDINATES[i+1];
-            points[2][0] = X_COORDINATES[i+2];
-            points[2][1] = Y_COORDINATES[i+2];
+            double[] point1 =  {X_COORDINATES[i], Y_COORDINATES[i]};
+            points[0] = point1;
+            double[] point2 = {X_COORDINATES[i+1], Y_COORDINATES[i+1]}; // The second point is the potential vertex of the triangle.
+            points[1] = point2;
+            double[] point3 = {X_COORDINATES[i+2], Y_COORDINATES[i+2]};
+            points[2] = point3;
             if(doesIntersect(points)){ continue; } // If the current set of points are not valid, skip to the next pass.
 
             // If the points are valid, compute the angle between them.
@@ -324,7 +324,7 @@ public final class LIConditions {
         double area1 = parameter.getAREA1();
 
         // Start by checking for faulty input.
-        if (NUM_POINTS != X_COORDINATES.length || NUM_POINTS != Y_COORDINATES.length || area >= 0) {
+        if (NUM_POINTS != X_COORDINATES.length || NUM_POINTS != Y_COORDINATES.length || area1 >= 0) {
             return false;
         }
 

@@ -11,7 +11,7 @@ public class Lic10Test {
 
   @Test
   /**
-   * Positive test using a a 3-2-4 right angle triangle at the
+   * Positive test using a right angle triangle at the
    * origin (exact area = 3).
    */
   void testLic10PositiveRightAngle() {
@@ -25,7 +25,7 @@ public class Lic10Test {
 
   @Test
   /**
-   * Positive test a tringale formed by the points (-3,2), (3,5), (6,4) (exact
+   * Positive test a tringale formed by the points (-3,2), (3,5), (6,-4) (exact
    * area = 37.5)
    * 
    */
@@ -40,7 +40,7 @@ public class Lic10Test {
 
   @Test
   /**
-   * Negative test that where there are no trinagles large enough (Inputs supplied
+   * Negative test that where there are no triangles large enough (Inputs supplied
    * correctly).
    */
   void testLic10Negative() {

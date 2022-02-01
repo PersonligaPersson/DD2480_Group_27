@@ -196,7 +196,7 @@ public final class LIConditions {
     private boolean LIC_6() {
         int nPTS = parameter.getN_PTS();
         double dist = parameter.getDIST();
-        if (NUM_POINTS < 3 || nPTS < 3 || nPTS > NUM_POINTS) {
+        if (NUM_POINTS < 3 || nPTS < 3 || nPTS > NUM_POINTS || dist < 0) {
             return false;
         } 
 

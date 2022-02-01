@@ -2,6 +2,8 @@ import java.util.*;
 
 public final class LIConditions {
 
+    private static final double PI = Math.PI;
+
     private final int NUM_CONDITIONS = 15;
 
     private boolean[] conditions;
@@ -238,15 +240,53 @@ public final class LIConditions {
 
     /**
      * Compute LIC 9
+     * using the third answer of https://stackoverflow.com/questions/1211212/how-to-calculate-an-angle-from-three-points
      *
      * @return LIC 9
      */
     private boolean LIC_9() {
-        boolean LIC_9 = false;
 
-        // TODO
+        // retrieve constants
+        final double EPSILON = parameter.getEPSILON();
+        final int C_PTS = parameter.getC_PTS();
+        final int D_PTS = parameter.getD_PTS();
 
-        return LIC_9;
+        // check conditions
+        if (NUM_POINTS < 5 || 1 > C_PTS || 1 > D_PTS || (C_PTS + D_PTS) > (NUM_POINTS - 3)) {
+            return false;
+        }
+
+        for (int i = 0; i < NUM_POINTS - C_PTS - D_PTS - 2; ++i) {
+            // get coordinates
+            // regarding the documentation, a is the first point, b is the third
+            double aX = X_COORDINATES[i];
+            double aY = Y_COORDINATES[i];
+            double vertex_X = X_COORDINATES[i + C_PTS + 1];
+            double vertex_Y = Y_COORDINATES[i + C_PTS + 1];
+            double bX = X_COORDINATES[i + C_PTS + D_PTS + 2];
+            double bY = Y_COORDINATES[i + C_PTS + D_PTS + 2];
+            // check condition that a =/= vertex and b =/= vertex
+            if ((aX != vertex_X || aY != vertex_Y) && (bX != vertex_X || bY != vertex_Y)) {
+                // compute the two vectors
+                double vectA_X = vertex_X - aX;
+                double vectA_Y = vertex_Y - aY;
+                double vectB_X = vertex_X - bX;
+                double vectB_Y = vertex_Y - bY;
+                // compute the two relative angles
+                double angleA = Math.atan2(vectA_Y, vectA_X);
+                double angleB = Math.atan2(vectB_Y, vectB_X);
+                // compute angle
+                double angle = angleA - angleB;
+                // adjust it
+                angle = angle < 0 ? angle + 2 * PI : angle;
+                System.out.println(angle);
+                if (angle < PI - EPSILON || angle > PI + EPSILON) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**

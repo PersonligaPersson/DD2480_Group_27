@@ -251,15 +251,35 @@ public final class LIConditions {
 
     /**
      * Compute LIC 10
+     * 
+     * Formula used for calculating triangle area of three coordinates: https://en.wikipedia.org/wiki/Triangle#Using_coordinates
      *
      * @return LIC 10
      */
     private boolean LIC_10() {
-        boolean LIC_10 = false;
+        int ePTS = parameter.getE_PTS();
+        int fPTS = parameter.getF_PTS();
 
-        // TODO
+        if (ePTS < 1 || fPTS < 1 || NUM_POINTS < 5
+                     || ePTS + fPTS > NUM_POINTS - 3) {
+            return false;
+        }
 
-        return LIC_10;
+        int offset1 = ePTS + 1; // offset from first point to second point.
+        int offset2 = ePTS + fPTS + 2; // offset from second point to third point
+
+        for (int i = 0; i < NUM_POINTS - offset2; i++) {
+            double triangleArea = 0.5
+                * Math.abs(
+                    (X_COORDINATES[i] - X_COORDINATES[i + offset2]) * (Y_COORDINATES[i + offset1] - Y_COORDINATES[i])
+                        - (X_COORDINATES[i] - X_COORDINATES[i + offset1]) * (Y_COORDINATES[i + offset2] - Y_COORDINATES[i]));
+
+            if (triangleArea > parameter.getAREA1()) {
+                return true;
+            }
+        }
+
+    return false;
     }
 
     /**

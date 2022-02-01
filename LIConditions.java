@@ -358,7 +358,7 @@ public final class LIConditions {
             double area = getTriangleArea(b,c,A);
 
             if(area > area1){
-                LIC_3 = true;
+                return true;
             }
 
         }

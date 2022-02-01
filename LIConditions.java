@@ -99,6 +99,20 @@ public final class LIConditions {
     }
 
     /**
+     * This method computes the area of a triangle with two sides and the angle between them. 
+     * Can be used in conjunction with the method getAngleInTriangle.
+     * Mathematical reference: https://onteachingmath.com/courses/trigonometry/area-non-right-triangle/
+     * 
+     * @param b
+     * @param c
+     * @param A
+     * @return
+     */
+    private double getTriangleArea(double b, double c, double A){
+        return 0.5*b*c*Math.sin(A);
+    }
+
+    /**
      * Computes the euclidian distance between two points in a plane.
      * 
      * @param x1 x-coordinate of the first point
@@ -339,7 +353,7 @@ public final class LIConditions {
             double A =  getAngleInTriangle(a, b, c);
 
             // Compute the area of the triangle.
-            double area = 0.5*b*c*Math.sin(A);
+            double area = getTriangleArea(b,c,A);
 
             if(area > area1){
                 LIC_3 = true;

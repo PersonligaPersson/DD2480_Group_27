@@ -95,7 +95,7 @@ public final class Decide {
         boolean[] FUV = new boolean[LEN];
 
         for (int i = 0; i < LEN; ++i) {
-            // PUV[i] is true iff PUV[i] is false or all values in PUM[i] are true
+            // FUV[i] is true iff PUV[i] is false or all values in PUM[i] are true
             if (!PUV[i]) {
                 FUV[i] = true;
             } else {
@@ -113,15 +113,8 @@ public final class Decide {
      */
     public static boolean decideLaunch(boolean[] FUV) {
 
-        for (int i = 0; i < NUM_CONDITIONS; ++i) {
-            // check the value
-            if (!FUV[i]) {
-                return false;
-            }
-        }
+        return forAllTrue(FUV);
 
-        // return true iff all value in FUV are true
-        return true;
     }
 
 }

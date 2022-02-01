@@ -211,9 +211,9 @@ public final class LIConditions {
         if (NUM_POINTS < 3 || kPTS < 1 || kPTS > NUM_POINTS - 2) {
             return false;
         }
-
+        double distSquared;
         for (int i = 0; i < NUM_POINTS - (kPTS + 1); i++) {
-            double distSquared = Math.pow(X_COORDINATES[i] - X_COORDINATES[i + kPTS + 1], 2)
+            distSquared = Math.pow(X_COORDINATES[i] - X_COORDINATES[i + kPTS + 1], 2)
                     + Math.pow(Y_COORDINATES[i] - Y_COORDINATES[i + kPTS + 1], 2);
 
             if (distSquared > len1Squared) {

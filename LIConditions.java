@@ -259,11 +259,71 @@ public final class LIConditions {
      * @return LIC 8
      */
     private boolean LIC_8() {
-        boolean LIC_8 = false;
 
-        // TODO
+        // Check for faulty parameters
+        int aPts = parameter.getA_PTS();
+        int bPts = parameter.getB_PTS();
+        if (NUM_POINTS < 5 || aPts + bPts > NUM_POINTS-3 || aPts < 1 || bPts < 1) {
+            return false;
+        }
 
-        return LIC_8;
+        double radius = parameter.getRADIUS1();
+        double x1 = 0;
+        double y1 = 0;
+        double x2 = 0;
+        double y2 = 0;
+        double x3 = 0;
+        double y3 = 0;
+        for (int i = 0; i < NUM_POINTS - 2 - aPts - bPts; i++) {
+            x1 = X_COORDINATES[i];
+            y1 = Y_COORDINATES[i];
+            x2 = X_COORDINATES[i + aPts + 1];
+            y2 = Y_COORDINATES[i + aPts + 1];
+            x3 = X_COORDINATES[i + aPts + bPts + 2];
+            y3 = Y_COORDINATES[i + aPts + bPts + 2];
+
+            if (dist(x1, y1, x2, y2) > 2*radius || dist(x1, y1, x3, y3) > 2*radius || dist(x3, y3, x2, y2) > 2*radius) {
+                // The points are too far apart <--> they don't all fit in the circle
+                return true;
+            }
+
+            // Angular sweep is used to determine whether the three points fit in a circle of radius RADIUS1: the circle is rotated around one of the points until all three points are enclosed
+            if (angleSweep(x1, y1, x2, y2, x3, y3, radius)) {
+                return true;
+            } /*else if (angleSweep(x2, y2, x1, y1, x3, y3, radius)) {
+                return true;
+            } else if (angleSweep(x3, y3, x1, y1, x2, y2, radius)) {
+                return true;
+            }*/
+        }
+
+        return false;
+    }
+
+    private double dist(double x1, double y1, double x2, double y2) {
+        return Math.sqrt(Math.pow(x1-x2, 2)+Math.pow(y1-y2, 2));
+    }
+
+    private boolean angleSweep(double x1, double y1, double x2, double y2, double x3, double y3, double radius) {
+        // Calculate the angles for (x2, y2) at which it enters and exits the circle
+        double dist = dist(x1, y1, x2, y2);
+        double a = Math.atan((y1-y2)/(x1-x2));
+        double b = Math.acos(dist/(2*radius));
+        double enter2 = a-b;
+        double exit2 = a+b;
+
+        // Calculate the angles for (x3, y3) at which it enters and exits the circle
+        dist = dist(x1, y1, x3, y3);
+        a = Math.atan((y1-y3)/(x1-x3));
+        b = Math.acos(dist/(2*radius));
+        double enter3 = a-b;
+        double exit3 = a+b;
+
+        if (!(enter2 < exit3 && enter3 < exit2)) {
+            // The intervalls for (x2, y2) and (x3, y3) for which they are contained in the circle don't overlap <--> the points don't all fit in the circle
+            return true;
+        }
+        return false;
     }
 
     /**

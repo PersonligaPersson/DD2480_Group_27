@@ -1,4 +1,4 @@
-package DD2480_Group_27;
+//package DD2480_Group_27;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -61,6 +61,20 @@ public class Lic10Test {
     double[] x = { 0, 2, 0 };
     double[] y = { 0, 0, 2 };
     int numPoints = 3;
+    LIConditions lic = new LIConditions(parameter, x, y, numPoints);
+    assertFalse(lic.computeAndGetConditions()[10]);
+  }
+
+  @Test
+  /**
+   * Negative test to test if E_PTS + F_PTS <= NUMPOINTS - 3.
+   * 
+   */
+  void testLic10NegativeFaultyInputs() {
+    Parameter parameter = new Parameter(0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0);
+    double[] x = { 0, 1, 2, 1, 0, 3 };
+    double[] y = { 0, 1, 0, 2, 2, 3 };
+    int numPoints = 6;
     LIConditions lic = new LIConditions(parameter, x, y, numPoints);
     assertFalse(lic.computeAndGetConditions()[10]);
   }

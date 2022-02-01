@@ -250,7 +250,7 @@ public final class LIConditions {
         int fPTS = parameter.getF_PTS();
 
         if (ePTS < 1 || fPTS < 1 || NUM_POINTS < 5
-                     || ePTS + ePTS > NUM_POINTS - 3) {
+                     || ePTS + fPTS > NUM_POINTS - 3) {
             return false;
         }
 

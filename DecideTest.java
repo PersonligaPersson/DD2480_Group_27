@@ -68,6 +68,9 @@ class DecideTest {
         }
     }
 
+    /**
+     * This test checks that the method returns false since not all values in FUV are true
+     */
     @Test
     void hasToReturnFalse() {
         boolean[] FUV = new boolean[]{true, true, true, true, false,
@@ -76,6 +79,9 @@ class DecideTest {
         assertFalse(Decide.decideLaunch(FUV));
     }
 
+    /**
+     * This test checks that the method returns true since all values in FUV are true
+     */
     @Test
     void hasToReturnTrue() {
         boolean[] FUV = new boolean[]{true, true, true, true, true,
@@ -84,16 +90,21 @@ class DecideTest {
         assertTrue(Decide.decideLaunch(FUV));
     }
 
+    /**
+     * This test checks all possible cases encountered when computing the FUV
+     */
+    @Test
     void checkFUV() {
         boolean[][] PUM = new boolean[][]{
-                {true, false, true},
-                {true, true, true},
-                {false, true, true}
+                {true, false, true, false},
+                {true, true, true, true},
+                {true, true, true, true},
+                {false, true, true, true}
         };
-        boolean[] PUV = new boolean[]{false, true, true};
+        boolean[] PUV = new boolean[]{false, true, false, true};
         boolean[] result = Decide.computeFUV(PUM, PUV);
 
-        boolean[] expected = new boolean[]{true, true, false};
+        boolean[] expected = new boolean[]{true, true, true, false};
         assertArrayEquals(result, expected);
     }
 } 

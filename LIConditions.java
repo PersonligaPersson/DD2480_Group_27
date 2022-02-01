@@ -207,7 +207,7 @@ public final class LIConditions {
             double distToLine;
             for (int j = i; j < i + (nPTS - 1); j++) {
                // enpoints are the same point.
-               if (doubleCompare(p1[0], p2[0]) == 0 && doubleCompare(p2[0], p2[0]) == 0) {
+               if (doubleCompare(p1[0], p2[0]) == 0 && doubleCompare(p1[1], p2[1]) == 0) {
                     distToLine = Math.sqrt(Math.pow(p2[0] - X_COORDINATES[j],2) + Math.pow(p2[1]- X_COORDINATES[j],2));
                // endpoints are different points.
                } else {

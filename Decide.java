@@ -36,12 +36,36 @@ public final class Decide {
      *
      * @return the PUM
      */
-    private boolean[][] computePUM() {
-        boolean[][] temp = new boolean[NUM_CONDITIONS][NUM_CONDITIONS];
+    public static boolean[][] computePUM(Connectors[][] LCM, boolean[] CMV) {
 
-        // TODO
+        final int LEN = CMV.length;
 
-        return temp;
+        boolean[][] PUM = new boolean[LEN][LEN];
+
+        for (int i = 0; i < LEN; ++i) {
+            for (int j = i; j < LEN; ++j) {
+                if (i == j) {
+                    PUM[i][j] = true;
+                } else {
+                    // since LCM symmetric, PUM is also symmetric, hence we fill in (i, j) and (j, i)
+                    switch (LCM[i][j]) {
+                        case ANDD:
+                            PUM[i][j] = CMV[i] && CMV[j];
+                            PUM[j][i] = CMV[i] && CMV[j];
+                            break;
+                        case ORR:
+                            PUM[i][j] = CMV[i] || CMV[j];
+                            PUM[j][i] = CMV[i] || CMV[j];
+                            break;
+                        default:
+                            PUM[i][j] = true;
+                            PUM[j][i] = true;
+                    }
+                }
+            }
+        }
+
+        return PUM;
     }
 
     /**
@@ -71,7 +95,7 @@ public final class Decide {
         boolean[] FUV = new boolean[LEN];
 
         for (int i = 0; i < LEN; ++i) {
-            // PUV[i] is true iff PUV[i] is false or all values in PUM[i] are true
+            // FUV[i] is true iff PUV[i] is false or all values in PUM[i] are true
             if (!PUV[i]) {
                 FUV[i] = true;
             } else {
@@ -89,15 +113,8 @@ public final class Decide {
      */
     public static boolean decideLaunch(boolean[] FUV) {
 
-        for (int i = 0; i < NUM_CONDITIONS; ++i) {
-            // check the value
-            if (!FUV[i]) {
-                return false;
-            }
-        }
+        return forAllTrue(FUV);
 
-        // return true iff all value in FUV are true
-        return true;
     }
 
 }

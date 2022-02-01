@@ -314,8 +314,8 @@ public final class LIConditions {
             double B = getAngleInTriangle(b, a, c);
 
             // Now we're checking the angle conditions.
-            if(B < (Math.PI-epsilon)){ LIC_2 = true; }
-            if(B > (Math.PI+epsilon)){ LIC_2 = true; }
+            if(B < (Math.PI-epsilon)){ return true; }
+            if(B > (Math.PI+epsilon)){ return true; }
         }        
 
         // Lastly return the result.

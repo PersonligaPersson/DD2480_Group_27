@@ -190,15 +190,41 @@ public final class LIConditions {
 
     /**
      * Compute LIC 6
-     *
+     * 
+     * To calculate the distance this formula is used: https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line#Line_defined_by_two_points
+     * Makes the assumption that the line is defined by the two endpoints, so the line will go on until infinity in both directions. 
      * @return LIC 6
      */
     private boolean LIC_6() {
-        boolean LIC_6 = false;
+        int nPTS = parameter.getN_PTS();
+        double dist = parameter.getDIST();
+        if (NUM_POINTS < 3 || nPTS < 3 || nPTS > NUM_POINTS || dist < 0) {
+            return false;
+        } 
 
-        // TODO
+        for (int i = 0; i < NUM_POINTS - (nPTS - 1); i++) {
+            double p1[] = {X_COORDINATES[i],Y_COORDINATES[i]};
+            double p2[] = {X_COORDINATES[i + nPTS - 1],Y_COORDINATES[i + nPTS - 1]};
 
-        return LIC_6;
+            double distToLine;
+            for (int j = i; j < i + (nPTS - 1); j++) {
+               // enpoints are the same point.
+               if (doubleCompare(p1[0], p2[0]) == 0 && doubleCompare(p1[1], p2[1]) == 0) {
+                    distToLine = Math.sqrt(Math.pow(p2[0] - X_COORDINATES[j],2) + Math.pow(p2[1]- X_COORDINATES[j],2));
+               // endpoints are different points.
+               } else {
+                    distToLine = (Math.abs(
+                                    (p2[0] - p1[0])*(p1[1] - Y_COORDINATES[j])
+                                    - (p1[0] - X_COORDINATES[j])*(p2[1] - p1[1]))) 
+                                    / (Math.sqrt(Math.pow(p2[0] - p1[0],2) + Math.pow(p2[1]- p1[1],2)));
+               }
+
+               if (distToLine > dist) {
+                   return true;
+               }
+            }
+        }
+        return false;
     }
 
     /**

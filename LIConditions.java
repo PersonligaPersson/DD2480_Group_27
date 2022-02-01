@@ -1,3 +1,5 @@
+package DD2480_Group_27;
+
 import java.util.*;
 
 public final class LIConditions {
@@ -257,7 +259,11 @@ public final class LIConditions {
     private boolean LIC_11() {
         boolean LIC_11 = false;
 
-        // TODO
+        // Start by checking for faulty input.
+
+        // Then iterate over all points.
+
+        // Check the condition.
 
         return LIC_11;
     }

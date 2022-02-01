@@ -66,6 +66,7 @@ class DecideTest {
         for (int i = 0; i < expected_NOTUSED.length; ++i) {
             assertArrayEquals(result_NOTUSED[i], expected_NOTUSED[i]);
         }
+    }
 
     @Test
     void hasToReturnFalse() {

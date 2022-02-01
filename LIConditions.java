@@ -266,13 +266,15 @@ public final class LIConditions {
         // Declare the diameter of the circle.
         double diameter = parameter.getRADIUS1()*2;
 
-        // Then iterate over all points and look for a tripple that can be contained within an enclosing circle.
+        // Then iterate over all points and look for a tripple that cannot be contained within an enclosing circle.
         for(int i=0; i < NUM_POINTS-2; i++){
-            LIC_1 = canBeContained(X_COORDINATES[i], X_COORDINATES[i+1], X_COORDINATES[i+2], Y_COORDINATES[i], Y_COORDINATES[i+1], Y_COORDINATES[i+2], diameter);
-            if(LIC_1)        
-                break;
+            if(!canBeContained(X_COORDINATES[i], X_COORDINATES[i+1], X_COORDINATES[i+2], Y_COORDINATES[i], Y_COORDINATES[i+1], Y_COORDINATES[i+2], diameter)){
+                // If the points cannot be contained the method will return true.
+                return true;
+            }
         }
 
+        // If all point tripplets can be contained the method returns false.
         return LIC_1;
     }
 
@@ -344,7 +346,7 @@ public final class LIConditions {
             double[] pointB = {X_COORDINATES[i+1], Y_COORDINATES[i+1]};
             double[] pointC = {X_COORDINATES[i+2], Y_COORDINATES[i+2]};
 
-            // Find the distnace between the points.
+            // Find the distance between the points.
             double a = distance(pointB[0], pointC[0], pointB[1], pointC[1]);
             double b = distance(pointA[0], pointC[0], pointA[1], pointC[1]);
             double c = distance(pointA[0], pointB[0], pointA[1], pointB[1]);

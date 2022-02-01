@@ -316,11 +316,40 @@ public final class LIConditions {
      * @return LIC 14
      */
     private boolean LIC_14() {
-        boolean LIC_14 = false;
+        int ePTS = parameter.getE_PTS();
+        int fPTS = parameter.getF_PTS();
+        double area1 = parameter.getAREA1();
+        double area2 = parameter.getAREA2();
 
-        // TODO
+        if (NUM_POINTS < 5 || area2 < 0) {
+            return false;
+        }
+        int offset1 = ePTS + 1; // offset from first point to second.
+        int offset2 = ePTS + fPTS + 2; // offset from first point to thrid.
+        boolean subcond1 = false, subcond2 = false;
+        double triangleArea;
 
-        return LIC_14;
+        for (int i = 0; i < NUM_POINTS - offset2; i++) {
+            triangleArea = 0.5
+                    * Math.abs(
+                            (X_COORDINATES[i] - X_COORDINATES[i + offset2])
+                                    * (Y_COORDINATES[i + offset1] - Y_COORDINATES[i])
+                                    - (X_COORDINATES[i] - X_COORDINATES[i + offset1])
+                                            * (Y_COORDINATES[i + offset2] - Y_COORDINATES[i]));
+            if (triangleArea > area1) {
+                subcond1 = true;
+            }
+
+            if (triangleArea < area2) {
+                subcond2 = true;
+            }
+
+            if (subcond1 && subcond2) {
+                return true;
+            }
+        }
+        return false;
+        
     }
 
 }

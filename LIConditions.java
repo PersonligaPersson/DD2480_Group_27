@@ -318,13 +318,13 @@ public final class LIConditions {
      * @return LIC 3
      */
     private boolean LIC_3() {
-        boolean LIC_3 = false;
+        boolean LIC_3 = false;   
 
         // Get the area parameter.
         double area1 = parameter.getAREA1();
 
         // Start by checking for faulty input.
-        if (NUM_POINTS != X_COORDINATES.length || NUM_POINTS != Y_COORDINATES.length || area1 >= 0) {
+        if (NUM_POINTS != X_COORDINATES.length || NUM_POINTS != Y_COORDINATES.length || area1 < 0) {
             return false;
         }
 
@@ -345,7 +345,7 @@ public final class LIConditions {
             double A =  getAngleInTriangle(a, b, c);
 
             // Compute the area of the triangle.
-            double area = (1/2)*b*c*Math.sin(A);
+            double area = 0.5*b*c*Math.sin(A);
 
             if(area > area1){
                 LIC_3 = true;

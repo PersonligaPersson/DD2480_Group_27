@@ -32,6 +32,9 @@ public class Lic9Test {
         assertFalse(lic.computeAndGetConditions()[9]);
     }
 
+    /**
+     * if D_PTS < 1, it has to return false
+     */
     @Test
     void checkD_PTS() {
         Parameter parameter = new Parameter(0, 0, Math.PI / 8, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0);

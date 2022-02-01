@@ -256,30 +256,45 @@ public final class LIConditions {
             return false;
         }
 
+        // declare variables
+        double aX = 0.0;
+        double aY = 0.0;
+        double vertex_X = 0.0;
+        double vertex_Y = 0.0;
+        double bX = 0.0;
+        double bY = 0.0;
+        double vectA_X = 0.0;
+        double vectA_Y = 0.0;
+        double vectB_X = 0.0;
+        double vectB_Y = 0.0;
+        double angleA = 0.0;
+        double angleB = 0.0;
+        double angle = 0.0;
+
         for (int i = 0; i < NUM_POINTS - C_PTS - D_PTS - 2; ++i) {
             // get coordinates
             // regarding the documentation, a is the first point, b is the third
-            double aX = X_COORDINATES[i];
-            double aY = Y_COORDINATES[i];
-            double vertex_X = X_COORDINATES[i + C_PTS + 1];
-            double vertex_Y = Y_COORDINATES[i + C_PTS + 1];
-            double bX = X_COORDINATES[i + C_PTS + D_PTS + 2];
-            double bY = Y_COORDINATES[i + C_PTS + D_PTS + 2];
+            aX = X_COORDINATES[i];
+            aY = Y_COORDINATES[i];
+            vertex_X = X_COORDINATES[i + C_PTS + 1];
+            vertex_Y = Y_COORDINATES[i + C_PTS + 1];
+            bX = X_COORDINATES[i + C_PTS + D_PTS + 2];
+            bY = Y_COORDINATES[i + C_PTS + D_PTS + 2];
             // check condition that a =/= vertex and b =/= vertex
             if ((aX != vertex_X || aY != vertex_Y) && (bX != vertex_X || bY != vertex_Y)) {
                 // compute the two vectors
-                double vectA_X = vertex_X - aX;
-                double vectA_Y = vertex_Y - aY;
-                double vectB_X = vertex_X - bX;
-                double vectB_Y = vertex_Y - bY;
+                vectA_X = vertex_X - aX;
+                vectA_Y = vertex_Y - aY;
+                vectB_X = vertex_X - bX;
+                vectB_Y = vertex_Y - bY;
                 // compute the two relative angles
-                double angleA = Math.atan2(vectA_Y, vectA_X);
-                double angleB = Math.atan2(vectB_Y, vectB_X);
+                angleA = Math.atan2(vectA_Y, vectA_X);
+                angleB = Math.atan2(vectB_Y, vectB_X);
                 // compute angle
-                double angle = angleA - angleB;
+                angle = angleA - angleB;
                 // adjust it
                 angle = angle < 0 ? angle + 2 * PI : angle;
-                System.out.println(angle);
+                // check it
                 if (angle < PI - EPSILON || angle > PI + EPSILON) {
                     return true;
                 }

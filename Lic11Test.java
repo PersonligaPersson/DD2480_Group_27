@@ -50,7 +50,7 @@ public class Lic11Test {
     @Test
     void lic11TooFewPoints() {
         Parameter parameter = new Parameter(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0);
-        double[] x = {2, 0};
+        double[] x = {1, 0};
         double[] y = {0, 0};
         int numPoints = 2;
         LIConditions lic = new LIConditions(parameter, x, y, numPoints);

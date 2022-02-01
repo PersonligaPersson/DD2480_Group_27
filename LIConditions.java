@@ -65,19 +65,20 @@ public final class LIConditions {
     }
 
     /**
-     * This function checks if a set of points intersects.
-     * O(n^2) because each point is compared with all other points.
+     * This function checks if a set of points of a triangle intersects with a vertex.     
      * @param coordinates
      * @return
      */
-    private boolean doesIntersect(double[][] coordinates){
-        for(int i=0; i<coordinates.length-1; i++){
-            for(int j=i+1; j<coordinates.length; j++){
-                if(coordinates[i][0] == coordinates[i+1][0] && coordinates[i][1] == coordinates[i+1][1]){
-                    return true;
-                }
-            }
-        }
+    private boolean doesIntersect(double[] pointA, double[] pointB, double[] vertex){
+        // for(int i=0; i<coordinates.length-1; i++){
+        //     for(int j=i+1; j<coordinates.length; j++){
+        //         if(coordinates[i][0] == coordinates[i+1][0] && coordinates[i][1] == coordinates[i+1][1]){
+        //             return true;
+        //         }
+        //     }
+        // }
+        if(pointA[0] == vertex[0] && pointA[1] == vertex[1]){ return true; } // Does the vertex intersect with point A?
+        if(pointB[0] == vertex[0] && pointB[1] == vertex[1]){ return true; } // Does the vertex intersect with point B?
         return false;
     }
 
@@ -280,25 +281,18 @@ public final class LIConditions {
         // Then iterate over all points and...
         for(int i=0; i < NUM_POINTS-2; i++){
             // Check if the points are a potentially valid combination.
-            double[][] points = new double[3][];
             double[] point1 =  {X_COORDINATES[i], Y_COORDINATES[i]};
-            points[0] = point1;
             double[] point2 = {X_COORDINATES[i+1], Y_COORDINATES[i+1]}; // The second point is the potential vertex of the triangle.
-            points[1] = point2;
             double[] point3 = {X_COORDINATES[i+2], Y_COORDINATES[i+2]};
-            points[2] = point3;
-            if(doesIntersect(points)){ continue; } // If the current set of points are not valid, skip to the next pass.
+            if(doesIntersect(point1, point3, point2)){ continue; } // If the current set of points are not valid, skip to the next pass.
 
             // If the points are valid, compute the angle between them.
             // We achieve this by using the cosine rule b^2 = a^2 + c^2 - 2ac*cos(B) where B is the angle at the vertex and b is the opposing side. 
             // Rearranged this gives the forumla B = arccos((a^2 + c^2 - b^2) / 2ac)
             // In this case the opposing side will always be a line between points 1 and 3.
-            double a = distance(points[0][0], points[1][0], points[0][1], points[1][1]);
-            double b = distance(points[0][0], points[2][0], points[0][1], points[2][1]);
-            double c = distance(points[2][0], points[1][0], points[2][1], points[1][1]);
-            
-            // double expr = (Math.pow(a, 2) + Math.pow(c, 2) - Math.pow(b, 2)) / (2*a*c);
-            // double B = Math.acos(expr);
+            double a = distance(point1[0], point2[0], point1[1], point2[1]);
+            double b = distance(point1[0], point3[0], point1[1], point3[1]);
+            double c = distance(point3[0], point2[0], point3[1], point2[1]);
 
             // Now get the angle.
             double B = getAngleInTriangle(b, a, c);

@@ -477,15 +477,44 @@ public final class LIConditions {
 
     /**
      * Compute LIC 13
-     *
+     * This condition evaluates to true when there are one set of points that cannot be contained in a circle of radius1 and one set of points that can be contained
+     * in a circle of radius2.
      * @return LIC 13
      */
     private boolean LIC_13() {
-        boolean LIC_13 = false;
+        int A_PTS = parameter.getA_PTS();
+        int B_PTS = parameter.getB_PTS();
+        double rad1 = parameter.getRADIUS1();
+        double rad2 = parameter.getRADIUS2();
+        boolean subcond1 = false; // Cannot be contained in in a circle with the radius rad1.
+        boolean subcond2 = false; // Can be contained in a circle with the radius rad2.
 
-        // TODO
+        if(NUM_POINTS < 5 || rad1 < 0 || rad2 < 0 || A_PTS < 0 || B_PTS < 0){
+            return false;
+        }
 
-        return LIC_13;
+        int offset1 = A_PTS + 1; // Offset from the first point to the second point.
+        int offset2 = A_PTS + B_PTS + 2; // Offset from the first point to the third point.
+
+        for(int i = 0; i < NUM_POINTS - offset2; i++){
+            // Checks if the point set cannot be contained winthin rad1. If not, the first subcond is met.
+            if(subcond1 == false && angleSweep(X_COORDINATES[i], Y_COORDINATES[i], X_COORDINATES[i+offset1], Y_COORDINATES[i+offset1], X_COORDINATES[i+offset2], Y_COORDINATES[i+offset2], rad1)){
+                subcond1 = true;
+            }
+
+            // Checks if the point set can be contained within rad2. If so, the second subcond is met.
+            if(subcond2 == false && !angleSweep(X_COORDINATES[i], Y_COORDINATES[i], X_COORDINATES[i+offset1], Y_COORDINATES[i+offset1], X_COORDINATES[i+offset2], Y_COORDINATES[i+offset2], rad2)){
+                subcond2 = true;
+            }
+
+            // If both subconditions have been met, return true.
+            if(subcond1 && subcond2){
+                return true;
+            }
+        }
+
+        // If we get to this point both subconditions have not been met and thus we return false.
+        return false;
     }
 
     /**

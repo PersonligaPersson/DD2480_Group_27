@@ -18,10 +18,23 @@ public class Lic8Test {
     }
 
     /*
+    Verifies that LIC8 is false when every set of three points separated by A_PTS and B_PTS points, respectively, can be contained in or on a circle of radius RADIUS1. In this test case, the three points are located on the x-axis in a straight line that goes through the origin. 
+    */
+    @Test
+    void lic8NegativeTest1() {
+        Parameter parameter = new Parameter(0, 4, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0);
+        double[] x = {0, -2, -4, 2, 4};
+        double[] y = {0, 1, 0, -3, 0};
+        int numPoints = 5;
+        LIConditions lic = new LIConditions(parameter, x, y, numPoints);
+        assertFalse(lic.computeAndGetConditions()[8]);
+    }
+
+    /*
     Verifies that LIC8 is false when every set of three points separated by A_PTS and B_PTS points, respectively, can be contained in or on a circle of radius RADIUS1. 
     */
     @Test
-    void lic8NegativeTest() {
+    void lic8NegativeTest2() {
         Parameter parameter = new Parameter(0, 2, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0);
         double[] x = {0, -2, 2, 2, 2};
         double[] y = {0, 1, 2, -3, 1};

@@ -82,6 +82,22 @@ public final class LIConditions {
     }
 
     /**
+     * This method finds the angle A between the the sides b and c in a triangle using the cosine rule.
+     * Formula a^2 = b^2 + c^2 - 2bc*cos(A)
+     * A = arccos(b^2+c^2-a^2 / 2bc)
+     * 
+     * @param a
+     * @param b
+     * @param c
+     * @return
+     */
+    private double getAngleInTriangle(double a, double b, double c){
+        double expr = (Math.pow(b, 2) + Math.pow(c, 2) - Math.pow(a, 2)) / (2*b*c);
+        double A = Math.acos(expr);
+        return A;
+    }
+
+    /**
      * Computes the euclidian distance between two points in a plane.
      * 
      * @param x1 x-coordinate of the first point
@@ -281,8 +297,11 @@ public final class LIConditions {
             double b = distance(points[0][0], points[2][0], points[0][1], points[2][1]);
             double c = distance(points[2][0], points[1][0], points[2][1], points[1][1]);
             
-            double expr = (Math.pow(a, 2) + Math.pow(c, 2) - Math.pow(b, 2)) / (2*a*c);
-            double B = Math.acos(expr);
+            // double expr = (Math.pow(a, 2) + Math.pow(c, 2) - Math.pow(b, 2)) / (2*a*c);
+            // double B = Math.acos(expr);
+
+            // Now get the angle.
+            double B = getAngleInTriangle(b, a, c);
 
             // Now we're checking the angle conditions.
             if(B < (Math.PI-epsilon)){ LIC_2 = true; }
@@ -301,17 +320,38 @@ public final class LIConditions {
     private boolean LIC_3() {
         boolean LIC_3 = false;
 
+        // Get the area parameter.
+        double area1 = parameter.getAREA1();
+
         // Start by checking for faulty input.
+        if (NUM_POINTS != X_COORDINATES.length || NUM_POINTS != Y_COORDINATES.length || area >= 0) {
+            return false;
+        }
 
+        // The area in the non right triangle is computed by the formula area = 1/2 * bc*sin(A) where A, B and C are angles and a,b,c their opposing sides.
         // Then iterate over all points...
+        for(int i=0; i < NUM_POINTS-2; i++){
+            // Store the points.
+            double[] pointA = {X_COORDINATES[i], Y_COORDINATES[i]};
+            double[] pointB = {X_COORDINATES[i+1], Y_COORDINATES[i+1]};
+            double[] pointC = {X_COORDINATES[i+2], Y_COORDINATES[i+2]};
 
-        // Find the distance between all points.
+            // Find the distnace between the points.
+            double a = distance(pointB[0], pointC[0], pointB[1], pointC[1]);
+            double b = distance(pointA[0], pointC[0], pointA[1], pointC[1]);
+            double c = distance(pointA[0], pointB[0], pointA[1], pointB[1]);
 
-        // Find the centerpoint between two of them.
+            // Compute the angle A.
+            double A =  getAngleInTriangle(a, b, c);
 
-        // Compute the area of the circle.
+            // Compute the area of the triangle.
+            double area = (1/2)*b*c*Math.sin(A);
 
-        // Check the area condition.
+            if(area > area1){
+                LIC_3 = true;
+            }
+
+        }
 
         return LIC_3;
     }

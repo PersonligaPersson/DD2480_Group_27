@@ -108,6 +108,25 @@ class DecideTest {
     }
 
     /**
+     * Verifies that the decide function returns false for input that's too long (>100 points).
+     */
+    @Test
+    void decideTooManyPointsTest(){
+        Parameter parameter = new Parameter(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        double[] x = new double[101];
+        double[] y = new double[101];
+        int numPoints = 101;
+        for(int i = 0; i < numPoints; i++){
+            x[i] = 0;
+            y[i] = 0;
+        }
+        Connectors[][] LCM = new Connectors[][]{{Connectors.NOTUSED}};
+        boolean[] PUV = new boolean[]{true};
+        
+        assertFalse(Decide.decideLaunch(numPoints, x, y, parameter, LCM, PUV));
+    }
+
+    /**
      * This test the entire program with data that don't allow the launch
      */
     @Test

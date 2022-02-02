@@ -674,18 +674,27 @@ public final class LIConditions {
 
     /**
      * Compute LIC 11
-     *
+     * Returns true if there is at least one set of points that fulfills the condition.
      * @return LIC 11
      */
     private boolean LIC_11() {
         boolean LIC_11 = false;
 
+        int g_pts = parameter.getG_PTS();
+
         // Start by checking for faulty input.
+        if (NUM_POINTS < 3 || g_pts < 1 || g_pts > NUM_POINTS - 2) {
+            return false;
+        }
 
-        // Then iterate over all points.
+        // Then iterate over all adequate points.
+        // There needs to be at leat g_pts space between the last iterated over value and the last point.
+        for(int i = 0; i < NUM_POINTS - g_pts - 1; i++){
+            if(X_COORDINATES[i+g_pts+1] - X_COORDINATES[i] < 0)
+                return true;
+        }
 
-        // Check the condition.
-
+        // Otherwise return false.
         return LIC_11;
     }
 

@@ -1,4 +1,4 @@
-package DD2480_Group_27;
+package assignment_1;
 
 public final class Decide {
 

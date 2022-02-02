@@ -1,8 +1,9 @@
+package assignment_1;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class Lic8Test {
+public class LIC8Test {
 
     /*
     Verifies that LIC8 is true when there are at least three points separated by A_PTS and B_PTS points, respectively, that cannot be contained in or on a circle of radius RADIUS1.

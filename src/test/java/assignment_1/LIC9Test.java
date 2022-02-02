@@ -1,10 +1,10 @@
-package DD2480_Group_27;
+package assignment_1;
 
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class Lic9Test {
+public class LIC9Test {
 
     /**
      * if NUMPOINTS < 5, it has to return false

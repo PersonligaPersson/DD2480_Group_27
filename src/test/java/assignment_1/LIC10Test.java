@@ -1,3 +1,4 @@
+package assignment_1;
 //package DD2480_Group_27;
 
 import org.junit.jupiter.api.Test;
@@ -7,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 /**
  * Lic10Test
  */
-public class Lic10Test {
+public class LIC10Test {
 
   @Test
   /**

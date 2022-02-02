@@ -1,10 +1,10 @@
-package DD2480_Group_27;
+package assignment_1;
 
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class Lic13Test {
+public class LIC13Test {
     /*
         Verifies that LIC 13 is false for too few points in the input.
         NUMPOINTS < 5.

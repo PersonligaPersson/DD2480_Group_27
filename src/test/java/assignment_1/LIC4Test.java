@@ -1,10 +1,10 @@
-package DD2480_Group_27;
+package assignment_1;
 
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class Lic4Test {
+public class LIC4Test {
 
     /*
     Verifies that LIC4 is true when the there is at least one set of Q_PTS consecutive points that cover more than QUADS quadrants. 

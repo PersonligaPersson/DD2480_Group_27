@@ -1,8 +1,9 @@
+package assignment_1;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class Lic5Test {
+public class LIC5Test {
 
     /*
     Verifies that LIC5 is true when there exists at least two consecutive points, p1 and p2, such that p2.x - p1.x < 0. 

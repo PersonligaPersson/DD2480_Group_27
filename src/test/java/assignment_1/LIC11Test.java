@@ -1,10 +1,10 @@
-package DD2480_Group_27;
+package assignment_1;
 
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class Lic11Test {
+public class LIC11Test {
     /*
     Verifies that LIC 11 is true for a valid sequence of points that meets the condition.
     */

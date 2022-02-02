@@ -1,8 +1,9 @@
+package assignment_1;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class Lic12Test {
+public class LIC12Test {
 
     /*
     Verifies that LIC12 is true when the there is at least one pair of points, separated by K_PTS consecutive points, where the points are more than LENGTH1 units apart and one pair where the points are less than LENGTH2 units apart. 

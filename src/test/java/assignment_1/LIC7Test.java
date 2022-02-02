@@ -1,9 +1,10 @@
+package assignment_1;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-public class Lic7Test {
+public class LIC7Test {
 
 	@Test
 	/**

@@ -1,4 +1,4 @@
-package DD2480_Group_27.Test;
+package assignment_1;
 
 import org.junit.jupiter.api.Test;
 

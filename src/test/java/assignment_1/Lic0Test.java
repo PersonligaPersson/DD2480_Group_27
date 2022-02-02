@@ -47,7 +47,7 @@ public class Lic0Test {
     }
 
     /**
-    *   Verifies that the method returns false for faulty input where we have too many points in the input. 
+    *   Verifies that lic0 returns false for faulty input where we have too many points in the input. 
     */
     @Test
     public void lic0TooManyPointsTest(){

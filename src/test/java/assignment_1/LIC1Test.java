@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 public class LIC1Test {
 
     /**
-    *   Verifies that the method returns false for faulty input where we have too many points in the input. 
+    *   Verifies that lic1 returns false for faulty input where we have too many points in the input. 
     */
     @Test
     public void lic1TooManyPointsTest(){

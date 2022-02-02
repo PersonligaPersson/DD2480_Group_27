@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class LIC5Test {
     /**
-     * Verifies that the method returns false when there's too many points in the input (> 100).
+     * Verifies that lic5 returns false when there's too many points in the input (> 100).
      */
     @Test
     void lic5TooManyPointsTest(){

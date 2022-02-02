@@ -25,3 +25,6 @@ hs_err_pid*
 # intellij files
 .idea
 out
+
+# Target folder
+target/

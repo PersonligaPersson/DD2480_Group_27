@@ -674,27 +674,18 @@ public final class LIConditions {
 
     /**
      * Compute LIC 11
-     * Returns true if there is at least one set of points that fulfills the condition.
+     *
      * @return LIC 11
      */
     private boolean LIC_11() {
         boolean LIC_11 = false;
 
-        int g_pts = parameter.getG_PTS();
-
         // Start by checking for faulty input.
-        if (NUM_POINTS < 3 || g_pts < 1 || g_pts > NUM_POINTS - 2) {
-            return false;
-        }
 
-        // Then iterate over all adequate points.
-        // There needs to be at leat g_pts space between the last iterated over value and the last point.
-        for(int i = 0; i < NUM_POINTS - g_pts - 1; i++){
-            if(X_COORDINATES[i+g_pts+1] - X_COORDINATES[i] < 0)
-                return true;
-        }
+        // Then iterate over all points.
 
-        // Otherwise return false.
+        // Check the condition.
+
         return LIC_11;
     }
 
@@ -733,15 +724,52 @@ public final class LIConditions {
 
     /**
      * Compute LIC 13
-     *
+     * This condition evaluates to true when there are one set of points that cannot be contained in a circle of radius1 and one set of points that can be contained
+     * in a circle of radius2.
      * @return LIC 13
      */
     private boolean LIC_13() {
-        boolean LIC_13 = false;
+        int A_PTS = parameter.getA_PTS();
+        int B_PTS = parameter.getB_PTS();
+        double rad1 = parameter.getRADIUS1();
+        double rad2 = parameter.getRADIUS2();
+        boolean subcond1 = false; // Cannot be contained in in a circle with the radius rad1.
+        boolean subcond2 = false; // Can be contained in a circle with the radius rad2.
 
-        // TODO
+        if(NUM_POINTS < 5 || rad1 < 0 || rad2 < 0 || A_PTS < 0 || B_PTS < 0){
+            return false;
+        }
 
-        return LIC_13;
+        int offset1 = A_PTS + 1; // Offset from the first point to the second point.
+        int offset2 = A_PTS + B_PTS + 2; // Offset from the first point to the third point.
+
+        for(int i = 0; i < NUM_POINTS - offset2; i++){
+            // Checks if the point set cannot be contained winthin rad1. If not, the first subcond is met.
+            if(subcond1 == false){
+                if(angleSweep(X_COORDINATES[i], Y_COORDINATES[i], X_COORDINATES[i+offset1], Y_COORDINATES[i+offset1], X_COORDINATES[i+offset2], Y_COORDINATES[i+offset2], rad1) 
+                || angleSweep(X_COORDINATES[i+offset1], Y_COORDINATES[i+offset1], X_COORDINATES[i], Y_COORDINATES[i], X_COORDINATES[i+offset2], Y_COORDINATES[i+offset2], rad1)
+                || angleSweep(X_COORDINATES[i+offset2], Y_COORDINATES[i+offset2], X_COORDINATES[i], Y_COORDINATES[i], X_COORDINATES[i+offset1], Y_COORDINATES[i+offset1], rad1)){
+                    subcond1 = true;
+                }                
+            }
+
+            // Checks if the point set can be contained within rad2. If so, the second subcond is met.
+            if(subcond2 == false){
+                if(!angleSweep(X_COORDINATES[i], Y_COORDINATES[i], X_COORDINATES[i+offset1], Y_COORDINATES[i+offset1], X_COORDINATES[i+offset2], Y_COORDINATES[i+offset2], rad2)
+                || !angleSweep(X_COORDINATES[i+offset1], Y_COORDINATES[i+offset1], X_COORDINATES[i], Y_COORDINATES[i], X_COORDINATES[i+offset2], Y_COORDINATES[i+offset2], rad2)
+                || !angleSweep(X_COORDINATES[i+offset2], Y_COORDINATES[i+offset2], X_COORDINATES[i+offset1], Y_COORDINATES[i+offset1], X_COORDINATES[i], Y_COORDINATES[i], rad2)){
+                    subcond2 = true;
+                }                
+            }
+
+            // If both subconditions have been met, return true.
+            if(subcond1 && subcond2){
+                return true;
+            }
+        }
+
+        // If we get to this point both subconditions have not been met and thus we return false.
+        return false;
     }
 
     /**

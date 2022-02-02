@@ -151,53 +151,6 @@ public final class LIConditions {
     }
 
     /**
-     * This method checks whether or not three points can be contained within a circle.
-     * 
-     * @param x1 x-coordinate of the first point
-     * @param x2 x-coordinate of the second point
-     * @param x3 x-coordinate of the third point
-     * @param y1 y-coordinate of the first point
-     * @param y2 y-coordinate of the second point
-     * @param y3 y-coordinate of the third point
-     * @return
-     */
-    private boolean canBeContained(double x1, double x2, double x3, double y1, double y2, double y3, double diameter){
-        // Compute the distance between the three points.            
-        double dist_p1p2 = distance(x1, x2, y1, y2);
-        double dist_p2p3 = distance(x2, x3, y2, y3);
-        double dist_p3p1 = distance(x3, x1, y3, y1);                
-
-        // Then check if any of the points are further away from each other than the circle's diameter. This would make it impossible to contain them in a circle.
-        if(dist_p1p2 > diameter || dist_p2p3 > diameter || dist_p3p1 > diameter)
-            return false;
-        
-        // If not, compute which points are furthest away from each other and compute the centerpoint.
-        double[] center_cords;
-        double[] remaining_point;
-        if(dist_p1p2 >= dist_p2p3 && dist_p1p2 >= dist_p3p1){
-            // In this case the centerpoint is drawn between points 1 and 2.
-            center_cords = getCenterpoint(x1, x2, y1, y2);
-            remaining_point = new double[]{x3,y3};
-        } else if(dist_p2p3 >= dist_p1p2 && dist_p2p3 >= dist_p3p1){
-            // In this case the centerpoint is drawn between points 2 and 3.
-            center_cords = getCenterpoint(x2, x3, y2, y3);
-            remaining_point = new double[]{x1,y1};
-        } else {
-            // In this case the centerpoint is drawn between points 3 and 1.
-            center_cords = getCenterpoint(x3, x1, y3, y1);
-            remaining_point = new double[]{x2,y2};
-        }
-
-        // At this point the remaining coordinate has to be at most the radius of the circle away from the centerpoint in order to be able to fit.
-        final double center_dist = distance(center_cords[0], remaining_point[0], center_cords[1], remaining_point[1]);
-        if(center_dist <= diameter/2) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * Compare two doubles
      *
      * @param a first double
@@ -268,10 +221,15 @@ public final class LIConditions {
             x3 = X_COORDINATES[i + 2];
             y3 = Y_COORDINATES[i + 2];
 
-            // Checks if the point set cannot be contained winthin radius
-            if (!canBeContained(x1, x2, x3, y1, y2, y3, radius*2)) {
+            if (dist(x1, y1, x2, y2) > 2*radius || dist(x1, y1, x3, y3) > 2*radius || dist(x3, y3, x2, y2) > 2*radius) {
+                // The points are too far apart <--> they don't all fit in the circle
                 return true;
             }
+
+            // Angular sweep is used to determine whether the three points fit in a circle of radius RADIUS1: the circle is rotated around one of the points until all three points are enclosed
+            if (angleSweep(x1, y1, x2, y2, x3, y3, radius) && angleSweep(x2, y2, x1, y1, x3, y3, radius) && angleSweep(x3, y3, x1, y1, x2, y2, radius)) {
+                return true;
+            } 
         }
         
 
@@ -514,10 +472,15 @@ public final class LIConditions {
             x3 = X_COORDINATES[i + aPts + bPts + 2];
             y3 = Y_COORDINATES[i + aPts + bPts + 2];
 
-            // Checks if the point set cannot be contained winthin radius
-            if (!canBeContained(x1, x2, x3, y1, y2, y3, radius*2)) {
+            if (dist(x1, y1, x2, y2) > 2*radius || dist(x1, y1, x3, y3) > 2*radius || dist(x3, y3, x2, y2) > 2*radius) {
+                // The points are too far apart <--> they don't all fit in the circle
                 return true;
             }
+
+            // Angular sweep is used to determine whether the three points fit in a circle of radius RADIUS1: the circle is rotated around one of the points until all three points are enclosed
+            if (angleSweep(x1, y1, x2, y2, x3, y3, radius) && angleSweep(x2, y2, x1, y1, x3, y3, radius) && angleSweep(x3, y3, x1, y1, x2, y2, radius)) {
+                return true;
+            } 
         }
 
         return false;
@@ -525,6 +488,24 @@ public final class LIConditions {
 
     private double dist(double x1, double y1, double x2, double y2) {
         return Math.sqrt(Math.pow(x1-x2, 2)+Math.pow(y1-y2, 2));
+    }
+
+    private boolean angleSweep(double x1, double y1, double x2, double y2, double x3, double y3, double radius) {
+        // Calculate the angles for (x2, y2) at which it enters and exits the circle
+        double dist = dist(x1, y1, x2, y2);
+        double a = Math.atan2(y1-y2, x1-x2);
+        double b = Math.acos(dist/(2*radius));
+        double enter2 = a-b;
+        double exit2 = a+b;
+
+        // Calculate the angles for (x3, y3) at which it enters and exits the circle
+        dist = dist(x1, y1, x3, y3);
+        a = Math.atan2(y1-y3, x1-x3);
+        b = Math.acos(dist/(2*radius));
+        double enter3 = a-b;
+        double exit3 = a+b;
+
+        return !(enter2 < exit3 && enter3 < exit2);
     }
 
     /**
@@ -707,14 +688,25 @@ public final class LIConditions {
         int offset2 = A_PTS + B_PTS + 2; // Offset from the first point to the third point.
 
         for(int i = 0; i < NUM_POINTS - offset2; i++){
+            double x1 = X_COORDINATES[i];
+            double x2 = X_COORDINATES[i+offset1];
+            double x3 = X_COORDINATES[i+offset2];
+            double y1 = Y_COORDINATES[i];
+            double y2 = Y_COORDINATES[i+offset1];
+            double y3 = Y_COORDINATES[i+offset2];
+            
             // Checks if the point set cannot be contained winthin rad1. If not, the first subcond is met.
-            if (!canBeContained(X_COORDINATES[i], X_COORDINATES[i+offset1], X_COORDINATES[i+offset2], Y_COORDINATES[i], Y_COORDINATES[i+offset1], Y_COORDINATES[i+offset2], rad1*2)) {
-                subcond1 = true;
+            if(subcond1 == false){      
+                if (angleSweep(x1, y1, x2, y2, x3, y3, rad1) && angleSweep(x2, y2, x1, y1, x3, y3, rad1) && angleSweep(x3, y3, x1, y1, x2, y2, rad1)) {
+                    subcond1 = true;
+                } 
             }
 
             // Checks if the point set can be contained within rad2. If so, the second subcond is met.
-            if (canBeContained(X_COORDINATES[i], X_COORDINATES[i+offset1], X_COORDINATES[i+offset2], Y_COORDINATES[i], Y_COORDINATES[i+offset1], Y_COORDINATES[i+offset2], rad2*2)) {
-                subcond2 = true;
+            if(subcond2 == false){
+                if (!angleSweep(x1, y1, x2, y2, x3, y3, rad2) || !angleSweep(x2, y2, x1, y1, x3, y3, rad2) || !angleSweep(x3, y3, x1, y1, x2, y2, rad2)) {
+                    subcond2 = true;
+                }               
             }
 
             // If both subconditions have been met, return true.

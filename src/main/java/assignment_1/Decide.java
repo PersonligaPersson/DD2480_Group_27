@@ -2,9 +2,6 @@ package assignment_1;
 
 public final class Decide {
 
-    // Final launch decision
-    private boolean LAUNCH;
-
     // boolean operator
     enum Connectors {
         ANDD,
@@ -12,24 +9,7 @@ public final class Decide {
         NOTUSED
     }
 
-    // Logical Connector Matrix
-    private Connectors[][] LCM;
-    // Preliminary Unlocking Matrix
-    private boolean[][] PUM;
-    // Conditions Met Vector
-    private boolean[] CMV;
-    // Preliminary Unlocking Vector
-    private boolean[] PUV;
-    // Final Unlocking Vector
-    private boolean[] FUV;
-
-    private static final int NUM_CONDITIONS = 15;
-
-    public static void main(String[] args) {
-
-        // TODO
-
-    }
+    public static void main(String[] args) {}
 
     /**
      * Compute the PUM
@@ -111,8 +91,17 @@ public final class Decide {
      *
      * @return the decision
      */
-    public static boolean decideLaunch(boolean[] FUV) {
+    public static boolean decideLaunch(int numPoints, double[] x, double[] y, Parameter parameter, Connectors[][] LCM, boolean[] PUV) {
 
+        // define the LI conditions
+        LIConditions lic = new LIConditions(parameter, x, y, numPoints);
+        // get the CMV
+        boolean[] CMV = lic.computeAndGetConditions();
+        // compute the PUM
+        boolean[][] PUM = computePUM(LCM, CMV);
+        // compute FUV
+        boolean[] FUV = computeFUV(PUM, PUV);
+        // decide the launch
         return forAllTrue(FUV);
 
     }

@@ -21,3 +21,5 @@ First of all, you will need [Java](https://www.java.com/fr/), see [this link](ht
 ```git clone https://github.com/PersonligaPersson/DD2480_Group_27.git```
 
 # Contributions
+
+The workload was split evenly among the group members such that each group member was responsible for 4-6 functions of the program. The group also had (almost) daily meetings to make sure that the work ran smoothly for everyone. In addition to the assigned tasks, all group members contributed to the creation of issues and the reviewing of pull requests.

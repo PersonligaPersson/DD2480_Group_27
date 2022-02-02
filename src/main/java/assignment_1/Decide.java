@@ -93,6 +93,11 @@ public final class Decide {
      */
     public static boolean decideLaunch(int numPoints, double[] x, double[] y, Parameter parameter, Connectors[][] LCM, boolean[] PUV) {
 
+        // Check if we have too many input points.
+        if(x.length > 100 || y.length > 100){
+            return false;
+        }
+
         // define the LI conditions
         LIConditions lic = new LIConditions(parameter, x, y, numPoints);
         // get the CMV

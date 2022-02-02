@@ -3,9 +3,27 @@ package assignment_1;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 
 public class LIC1Test {
+
+    /**
+    *   Verifies that lic1 returns false for faulty input where we have too many points in the input. 
+    */
+    @Test
+    public void lic1TooManyPointsTest(){
+        Parameter parameter = new Parameter(0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        double[] x_cords = new double[101];
+        double[] y_cords = new double[101];
+        int numPoints = 101;
+        for(int i = 0; i < numPoints; i++){
+            x_cords[i] = i;
+            y_cords[i] = i;
+        }
+        LIConditions lics = new LIConditions(parameter, x_cords, y_cords, numPoints);
+        assertFalse(lics.computeAndGetConditions()[1]);
+    }
 
     /**
      * Verifies that the method returns true for positive integers where the last remaining point is just out of reach.

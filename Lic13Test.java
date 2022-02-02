@@ -45,4 +45,18 @@ public class Lic13Test {
         LIConditions lic = new LIConditions(parameter, x, y, numPoints);
         assertTrue(lic.computeAndGetConditions()[13]);
     }
+
+    /*
+        Verifies that LIC 13 returns false when only one subcondition is met.    
+        In this case the points can be enclosed in both circles.
+    */
+    @Test
+    void Lic13OnlyOneSubconditionMet() {
+        Parameter parameter = new Parameter(0, 2, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 5, 0);
+        double[] x = {-2, 0, 0, 0, 2};
+        double[] y = {0, 0, 0, 0, 0};
+        int numPoints = 5;
+        LIConditions lic = new LIConditions(parameter, x, y, numPoints);
+        assertFalse(lic.computeAndGetConditions()[13]);
+    }    
 }

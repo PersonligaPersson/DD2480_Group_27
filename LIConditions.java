@@ -498,13 +498,21 @@ public final class LIConditions {
 
         for(int i = 0; i < NUM_POINTS - offset2; i++){
             // Checks if the point set cannot be contained winthin rad1. If not, the first subcond is met.
-            if(subcond1 == false && angleSweep(X_COORDINATES[i], Y_COORDINATES[i], X_COORDINATES[i+offset1], Y_COORDINATES[i+offset1], X_COORDINATES[i+offset2], Y_COORDINATES[i+offset2], rad1)){
-                subcond1 = true;
+            if(subcond1 == false){
+                if(angleSweep(X_COORDINATES[i], Y_COORDINATES[i], X_COORDINATES[i+offset1], Y_COORDINATES[i+offset1], X_COORDINATES[i+offset2], Y_COORDINATES[i+offset2], rad1) 
+                || angleSweep(X_COORDINATES[i+offset1], Y_COORDINATES[i+offset1], X_COORDINATES[i], Y_COORDINATES[i], X_COORDINATES[i+offset2], Y_COORDINATES[i+offset2], rad1)
+                || angleSweep(X_COORDINATES[i+offset2], Y_COORDINATES[i+offset2], X_COORDINATES[i], Y_COORDINATES[i], X_COORDINATES[i+offset1], Y_COORDINATES[i+offset1], rad1)){
+                    subcond1 = true;
+                }                
             }
 
             // Checks if the point set can be contained within rad2. If so, the second subcond is met.
-            if(subcond2 == false && !angleSweep(X_COORDINATES[i], Y_COORDINATES[i], X_COORDINATES[i+offset1], Y_COORDINATES[i+offset1], X_COORDINATES[i+offset2], Y_COORDINATES[i+offset2], rad2)){
-                subcond2 = true;
+            if(subcond2 == false){
+                if(!angleSweep(X_COORDINATES[i], Y_COORDINATES[i], X_COORDINATES[i+offset1], Y_COORDINATES[i+offset1], X_COORDINATES[i+offset2], Y_COORDINATES[i+offset2], rad2)
+                || !angleSweep(X_COORDINATES[i+offset1], Y_COORDINATES[i+offset1], X_COORDINATES[i], Y_COORDINATES[i], X_COORDINATES[i+offset2], Y_COORDINATES[i+offset2], rad2)
+                || !angleSweep(X_COORDINATES[i+offset2], Y_COORDINATES[i+offset2], X_COORDINATES[i+offset1], Y_COORDINATES[i+offset1], X_COORDINATES[i], Y_COORDINATES[i], rad2)){
+                    subcond2 = true;
+                }                
             }
 
             // If both subconditions have been met, return true.

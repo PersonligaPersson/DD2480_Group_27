@@ -235,18 +235,11 @@ public final class LIConditions {
         double lengthPowTwo = Math.pow(parameter.getLENGTH1(), 2);
         for (int i = 0; i < NUM_POINTS-1; i++) {
 
-            // // Calculate Euclidean distance
-            // distPowTwo = Math.pow(X_COORDINATES[i]-X_COORDINATES[i+1], 2) + Math.pow(Y_COORDINATES[i]-Y_COORDINATES[i+1], 2);
-            // if (distPowTwo > lengthPowTwo) {
-            //     return true;
-            // }
-
             // Refactored to using the euclidian distance helper function.
             distPowTwo = distancePowTwo(X_COORDINATES[i], X_COORDINATES[i+1], Y_COORDINATES[i], Y_COORDINATES[i+1]);
             if(distPowTwo > lengthPowTwo){
                 return true;
             }
-
         }
         return false;
     }
@@ -257,7 +250,6 @@ public final class LIConditions {
      * @return LIC 1
      */
     private boolean LIC_1() {
-        boolean LIC_1 = false;
 
         // Start by checking for faulty input.
         // Check for faulty parameters
@@ -265,19 +257,41 @@ public final class LIConditions {
             return false;
         }
 
-        // Declare the diameter of the circle.
-        double diameter = parameter.getRADIUS1()*2;
+        double radius = parameter.getRADIUS1();
+        double x1 = 0;
+        double y1 = 0;
+        double x2 = 0;
+        double y2 = 0;
+        double x3 = 0;
+        double y3 = 0;
 
-        // Then iterate over all points and look for a tripple that cannot be contained within an enclosing circle.
+        // Then iterate over all points and look for a triple that cannot be contained within an enclosing circle.
         for(int i=0; i < NUM_POINTS-2; i++){
-            if(!canBeContained(X_COORDINATES[i], X_COORDINATES[i+1], X_COORDINATES[i+2], Y_COORDINATES[i], Y_COORDINATES[i+1], Y_COORDINATES[i+2], diameter)){
-                // If the points cannot be contained the method will return true.
+            x1 = X_COORDINATES[i];
+            y1 = Y_COORDINATES[i];
+            x2 = X_COORDINATES[i + 1];
+            y2 = Y_COORDINATES[i + 1];
+            x3 = X_COORDINATES[i + 2];
+            y3 = Y_COORDINATES[i + 2];
+
+            if (dist(x1, y1, x2, y2) > 2*radius || dist(x1, y1, x3, y3) > 2*radius || dist(x3, y3, x2, y2) > 2*radius) {
+                // The points are too far apart <--> they don't all fit in the circle
+                return true;
+            }
+
+            // Angular sweep is used to determine whether the three points fit in a circle of radius RADIUS1: the circle is rotated around one of the points until all three points are enclosed
+            if (angleSweep(x1, y1, x2, y2, x3, y3, radius)) {
+                return true;
+            } else if (angleSweep(x2, y2, x1, y1, x3, y3, radius)) {
+                return true;
+            } else if (angleSweep(x3, y3, x1, y1, x2, y2, radius)) {
                 return true;
             }
         }
+        
 
-        // If all point tripplets can be contained the method returns false.
-        return LIC_1;
+        // If all point triplets can be contained the method returns false.
+        return false;
     }
 
     /**
@@ -523,11 +537,11 @@ public final class LIConditions {
             // Angular sweep is used to determine whether the three points fit in a circle of radius RADIUS1: the circle is rotated around one of the points until all three points are enclosed
             if (angleSweep(x1, y1, x2, y2, x3, y3, radius)) {
                 return true;
-            } /*else if (angleSweep(x2, y2, x1, y1, x3, y3, radius)) {
+            } else if (angleSweep(x2, y2, x1, y1, x3, y3, radius)) {
                 return true;
             } else if (angleSweep(x3, y3, x1, y1, x2, y2, radius)) {
                 return true;
-            }*/
+            }
         }
 
         return false;

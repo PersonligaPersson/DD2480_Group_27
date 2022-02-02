@@ -2,6 +2,8 @@ package assignment_1;
 
 import org.junit.jupiter.api.Test;
 
+import assignment_1.Decide.Connectors;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class DecideTest {
@@ -69,28 +71,6 @@ class DecideTest {
     }
 
     /**
-     * This test checks that the method returns false since not all values in FUV are true
-     */
-    @Test
-    void hasToReturnFalse() {
-        boolean[] FUV = new boolean[]{true, true, true, true, false,
-                true, true, true, true, true,
-                true, true, true, true, true};
-        assertFalse(Decide.decideLaunch(FUV));
-    }
-
-    /**
-     * This test checks that the method returns true since all values in FUV are true
-     */
-    @Test
-    void hasToReturnTrue() {
-        boolean[] FUV = new boolean[]{true, true, true, true, true,
-                true, true, true, true, true,
-                true, true, true, true, true};
-        assertTrue(Decide.decideLaunch(FUV));
-    }
-
-    /**
      * This test checks all possible cases encountered when computing the FUV
      */
     @Test
@@ -107,4 +87,43 @@ class DecideTest {
         boolean[] expected = new boolean[]{true, true, true, false};
         assertArrayEquals(result, expected);
     }
+
+    /**
+     * This test the entire program with data that allow the launch
+     */
+    @Test
+    void decideReturnTrue() {
+            
+        // To defined
+        Parameter parameter = new Parameter(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        double[] x = new double[]{0};
+        double[] y = new double[]{0};
+        int numPoints = 1;
+        Connectors[][] LCM = new Connectors[][]{{Connectors.NOTUSED}};
+        boolean[] PUV = new boolean[]{true};
+
+        // decide launch
+        // assertTrue(Decide.decideLaunch(numPoints, x, y, parameter, LCM, PUV));
+
+    }
+
+    /**
+     * This test the entire program with data that don't allow the launch
+     */
+    @Test
+    void decideReturnFalse() {
+            
+        // To defined
+        Parameter parameter = new Parameter(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        double[] x = new double[]{0};
+        double[] y = new double[]{0};
+        int numPoints = 1;
+        Connectors[][] LCM = new Connectors[][]{{Connectors.NOTUSED}};
+        boolean[] PUV = new boolean[]{true};
+
+        // decide launch
+        // assertFalse(Decide.decideLaunch(numPoints, x, y, parameter, LCM, PUV));
+
+    }
+
 } 

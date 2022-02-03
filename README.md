@@ -34,8 +34,10 @@ Firstly, you need to enter all the input parameters in the main function located
 
 The workload was split evenly among the group members such that each group member was responsible for 4-6 functions of the program. The group also had (almost) daily meetings to make sure that the work ran smoothly for everyone. In addition to the assigned tasks, all group members contributed to the creation of issues and the reviewing of pull requests.
 
+Amanda Strömdahl wrote the document describing our [way of working](Essence.pdf) and Bastien Faivre wrote this README.
+
 ## Contributors
 - Arvid Gotthard (<gotthard@kth.se>)
-- Max Persson (<>)
+- Max Persson (<maxper@kth.se>)
 - Amanda Strömdahl (<astromd@kth.se>)
 - Bastien Faivre (<faivre@kth.se>)

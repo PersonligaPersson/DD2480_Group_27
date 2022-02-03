@@ -9,7 +9,34 @@ public final class Decide {
         NOTUSED
     }
 
-    public static void main(String[] args) {}
+    public static void main(String[] args) {
+        
+        Parameter parameter = new Parameter(4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        double[] x = {0, 3, 2};
+        double[] y = {0, 4, 2};
+        int numPoints = 3;
+        Connectors[][] LCM = new Connectors[][]{
+          {Decide.Connectors.ANDD,Decide.Connectors.ORR,Decide.Connectors.ORR,Decide.Connectors.ORR,Decide.Connectors.ORR,Decide.Connectors.ORR,Decide.Connectors.ORR,Decide.Connectors.ORR,Decide.Connectors.ORR,Decide.Connectors.ORR,Decide.Connectors.ORR,Decide.Connectors.ORR,Decide.Connectors.ORR,Decide.Connectors.ORR,Decide.Connectors.ORR},
+          {Decide.Connectors.ORR,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED},
+          {Decide.Connectors.ANDD,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED},
+          {Decide.Connectors.ORR,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED},
+          {Decide.Connectors.ORR,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED},
+          {Decide.Connectors.ORR,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED},
+          {Decide.Connectors.ORR,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED},
+          {Decide.Connectors.ORR,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED},
+          {Decide.Connectors.ORR,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED},
+          {Decide.Connectors.ORR,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED},
+          {Decide.Connectors.ORR,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED},
+          {Decide.Connectors.ORR,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED},
+          {Decide.Connectors.ORR,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED},
+          {Decide.Connectors.ORR,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED},
+          {Decide.Connectors.ORR,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED,Decide.Connectors.NOTUSED},
+          };
+        boolean[] PUV = new boolean[]{true,false,false,false,false,false,false,false,false,false,false,false,false,false,false};
+
+        System.out.println("LAUNCH = " + decideLaunch(numPoints, x, y, parameter, LCM, PUV));
+
+    }
 
     /**
      * Compute the PUM

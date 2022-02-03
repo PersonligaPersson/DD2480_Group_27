@@ -52,6 +52,10 @@ public final class LIConditions {
         // return the results
         return conditions;
     }
+
+    /**********************************************************************
+     * Helper methods
+     *********************************************************************/
     
     /**
      * Computes the euclidian distance to the power of two between two points in a plane.
@@ -60,21 +64,23 @@ public final class LIConditions {
      * @param x2 x-coordinate of the second point
      * @param y1 y-coordinate of the first point
      * @param y2 y-coordinate of the second point
-     * @return
+     * @return the squared distance
      */
     private double distancePowTwo(double x1, double x2, double y1, double y2){
-        return Math.pow(x2-x1,2) + Math.pow(y2-y1,2);
+        return Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2);
     }
 
     /**
-     * This function checks if a set of points of a triangle intersects with a vertex.     
-     * @param coordinates
-     * @return
+     * This function checks if a set of points of a triangle intersects with a vertex.  
+     * 
+     * @param pointA the first point
+     * @param pointB the second point
+     * @param vertex the vertex
+     * @return true if it intersects
      */
     private boolean doesIntersect(double[] pointA, double[] pointB, double[] vertex){
-        if(pointA[0] == vertex[0] && pointA[1] == vertex[1]){ return true; } // Does the vertex intersect with point A?
-        if(pointB[0] == vertex[0] && pointB[1] == vertex[1]){ return true; } // Does the vertex intersect with point B?
-        return false;
+        return (pointA[0] == vertex[0] && pointA[1] == vertex[1]) || 
+                (pointB[0] == vertex[0] && pointB[1] == vertex[1]);
     }
 
     /**
@@ -82,29 +88,43 @@ public final class LIConditions {
      * Formula a^2 = b^2 + c^2 - 2bc*cos(A)
      * A = arccos(b^2+c^2-a^2 / 2bc)
      * 
-     * @param a
-     * @param b
-     * @param c
-     * @return
+     * @param a side a
+     * @param b side b
+     * @param c side c
+     * @return the angle between side b and c
      */
     private double getAngleInTriangle(double a, double b, double c){
-        double expr = (Math.pow(b, 2) + Math.pow(c, 2) - Math.pow(a, 2)) / (2*b*c);
-        double A = Math.acos(expr);
-        return A;
+        double expr = (Math.pow(b, 2) + Math.pow(c, 2) - Math.pow(a, 2)) / (2 * b * c);
+        return Math.acos(expr);
     }
 
     /**
-     * This method computes the area of a triangle with two sides and the angle between them. 
-     * Can be used in conjunction with the method getAngleInTriangle.
-     * Mathematical reference: https://onteachingmath.com/courses/trigonometry/area-non-right-triangle/
+     * Check if the angle is < PI - EPSILON or > PI - EPSILON
      * 
-     * @param b
-     * @param c
-     * @param A
-     * @return
+     * @param pointA    pointA coordinates
+     * @param pointB    pointB coordinates 
+     * @param vertex    vertex coordinates
+     * @param EPSILON   Epsilon
+     * @return true if this is the case
      */
-    private double getTriangleArea(double b, double c, double A){
-        return 0.5*b*c*Math.sin(A);
+    private boolean checkAngle(double[] pointA, double[] pointB, double[] vertex, double EPSILON) {
+        // check condition that a =/= vertex and b =/= vertex
+        if (!doesIntersect(pointA, pointB, vertex)) {
+            // If the points are valid, compute the angle between them.
+            // We achieve this by using the cosine rule b^2 = a^2 + c^2 - 2ac*cos(B) where B is the angle at the vertex and b is the opposing side. 
+            // Rearranged this gives the forumla B = arccos((a^2 + c^2 - b^2) / 2ac)
+            // In this case the opposing side will always be a line between points 1 and 3.
+            double a = distance(pointA[0], vertex[0], pointA[1], vertex[1]);
+            double b = distance(pointA[0], pointB[0], pointA[1], pointB[1]);
+            double c = distance(pointB[0], vertex[0], pointB[1], vertex[1]);
+            // Now get the angle.
+            double B = getAngleInTriangle(b, a, c);
+            // Now we're checking the angle conditions.
+            if (B < (PI - EPSILON) || B > (PI + EPSILON)){
+                return true;
+            }
+        }     
+        return false;  
     }
 
     /**
@@ -114,40 +134,10 @@ public final class LIConditions {
      * @param x2 x-coordinate of the second point
      * @param y1 y-coordinate of the first point
      * @param y2 y-coordinate of the second point
-     * @return
+     * @return the euclidean distance
      */
     private double distance(double x1, double x2, double y1, double y2){
-        return Math.sqrt(Math.pow(x2-x1,2) + Math.pow(y2-y1,2));
-    }
-
-    /**
-     * This method returns the centerpoint between the points in a plane.
-     * 
-     * @param x1 x-coordinate of the first point
-     * @param x2 x-coordinate of the second point
-     * @param y1 y-coordinate of the first point
-     * @param y2 y-coordinate of the second point
-     * @return
-     */
-    private double[] getCenterpoint(double x1, double x2, double y1, double y2){
-        double c_x, c_y;        
-
-        // Compute the x-coordinate.
-        if(x1 > x2){
-            c_x = x1 - Math.abs(x1-x2)/2;
-        } else {
-            c_x = x1 + Math.abs(x1-x2)/2;
-        }
-
-        // Compute the y-coordinate.
-        if(y1 > y2){
-            c_y = y1 - Math.abs(y1-y2)/2;
-        } else {
-            c_y = y1 + Math.abs(y1-y2)/2;
-        }
-
-        // Return the coordinates.
-        return new double[]{c_x, c_y};
+        return Math.sqrt(distancePowTwo(x1, x2, y1, y2));
     }
 
     /**
@@ -168,27 +158,67 @@ public final class LIConditions {
     }
 
     /**
+     * This fonction check if a circle rotating around one point (point 1) can contains all points
+     * 
+     * @param x1 x-coordinate of the first point
+     * @param y1 x-coordinate of the second point
+     * @param x2 x-coordinate of the third point
+     * @param y2 y-coordinate of the first point
+     * @param x3 y-coordinate of the second point
+     * @param y3 y-coordinate of the third point
+     * @param radius the radius of the circle
+     * @return true if possible
+     */
+    private boolean angleSweep(double x1, double y1, double x2, double y2, double x3, double y3, double radius) {
+        // Calculate the angles for (x2, y2) at which it enters and exits the circle
+        double dist = distance(x1, x2, y1, y2);
+        double a = Math.atan2(y1 - y2, x1 - x2);
+        double b = Math.acos(dist / (2 * radius));
+        double enter2 = a - b;
+        double exit2 = a + b;
+
+        // Calculate the angles for (x3, y3) at which it enters and exits the circle
+        dist = distance(x1, x3, y1, y3);
+        a = Math.atan2(y1 - y3, x1 - x3);
+        b = Math.acos(dist / (2 * radius));
+        double enter3 = a - b;
+        double exit3 = a + b;
+
+        // check if the two intervals intersect
+        return enter2 < exit3 && enter3 < exit2;
+    }
+
+    /**********************************************************************
+     * LICs
+     *********************************************************************/
+
+    /**
      * Compute LIC 0
      *
      * @return LIC 0
      */
     private boolean LIC_0() {
+
+        // Get parameter
+        final double length1 = parameter.getLENGTH1();
+
         // Check for faulty parameters
-        if (NUM_POINTS != X_COORDINATES.length || NUM_POINTS != Y_COORDINATES.length || parameter.getLENGTH1() <= 0) {
+        if (NUM_POINTS != X_COORDINATES.length || NUM_POINTS != Y_COORDINATES.length || length1 <= 0) {
             return false;
         }
 
         double distPowTwo = 0; 
-        double lengthPowTwo = Math.pow(parameter.getLENGTH1(), 2);
-        for (int i = 0; i < NUM_POINTS-1; i++) {
-
+        double lengthPowTwo = Math.pow(length1, 2);
+        for (int i = 0; i < NUM_POINTS - 1; i++) {
             // Refactored to using the euclidian distance helper function.
             distPowTwo = distancePowTwo(X_COORDINATES[i], X_COORDINATES[i+1], Y_COORDINATES[i], Y_COORDINATES[i+1]);
-            if(distPowTwo > lengthPowTwo){
+            if (distPowTwo > lengthPowTwo){
                 return true;
             }
         }
+
         return false;
+
     }
 
     /**
@@ -198,13 +228,15 @@ public final class LIConditions {
      */
     private boolean LIC_1() {
 
-        // Start by checking for faulty input.
+        // Get parameter
+        final double radius = parameter.getRADIUS1();
+
         // Check for faulty parameters
-        if (NUM_POINTS != X_COORDINATES.length || NUM_POINTS != Y_COORDINATES.length || parameter.getRADIUS1() <= 0) {
+        if (NUM_POINTS != X_COORDINATES.length || NUM_POINTS != Y_COORDINATES.length || radius <= 0) {
             return false;
         }
 
-        double radius = parameter.getRADIUS1();
+        // declare variables
         double x1 = 0;
         double y1 = 0;
         double x2 = 0;
@@ -213,7 +245,8 @@ public final class LIConditions {
         double y3 = 0;
 
         // Then iterate over all points and look for a triple that cannot be contained within an enclosing circle.
-        for(int i=0; i < NUM_POINTS-2; i++){
+        for (int i = 0; i < NUM_POINTS - 2; i++){
+
             x1 = X_COORDINATES[i];
             y1 = Y_COORDINATES[i];
             x2 = X_COORDINATES[i + 1];
@@ -221,21 +254,15 @@ public final class LIConditions {
             x3 = X_COORDINATES[i + 2];
             y3 = Y_COORDINATES[i + 2];
 
-            if (dist(x1, y1, x2, y2) > 2*radius || dist(x1, y1, x3, y3) > 2*radius || dist(x3, y3, x2, y2) > 2*radius) {
-                // The points are too far apart <--> they don't all fit in the circle
+            // Angular sweep is used to determine whether the three points fit in a circle of radius RADIUS1
+            if (!angleSweep(x1, y1, x2, y2, x3, y3, radius) && !angleSweep(x2, y2, x1, y1, x3, y3, radius) && !angleSweep(x3, y3, x1, y1, x2, y2, radius)) {
                 return true;
-            }
-
-            // Angular sweep is used to determine whether the three points fit in a circle of radius RADIUS1: the circle is rotated around one of the points until all three points are enclosed
-            if (angleSweep(x1, y1, x2, y2, x3, y3, radius) && angleSweep(x2, y2, x1, y1, x3, y3, radius) && angleSweep(x3, y3, x1, y1, x2, y2, radius)) {
-                return true;
-
             } 
         }
         
-
         // If all point triplets can be contained the method returns false.
         return false;
+
     }
 
     /**
@@ -244,42 +271,27 @@ public final class LIConditions {
      * @return LIC 2
      */
     private boolean LIC_2() {
-        boolean LIC_2 = false;
 
-        // Get the epsilon parameter.
-        double epsilon = parameter.getEPSILON();
+        // Get parameter
+        final double EPSILON = parameter.getEPSILON();
 
-        // Start by checking for faulty input.
-        if (NUM_POINTS != X_COORDINATES.length || NUM_POINTS != Y_COORDINATES.length || epsilon > Math.PI || epsilon < 0) {
+        // Check for faulty parameters
+        if (NUM_POINTS != X_COORDINATES.length || NUM_POINTS != Y_COORDINATES.length || EPSILON > PI || EPSILON < 0) {
             return false;
         }
-        
-        // Then iterate over all points and...
-        for(int i=0; i < NUM_POINTS-2; i++){
-            // Check if the points are a potentially valid combination.
-            double[] point1 =  {X_COORDINATES[i], Y_COORDINATES[i]};
-            double[] point2 = {X_COORDINATES[i+1], Y_COORDINATES[i+1]}; // The second point is the potential vertex of the triangle.
-            double[] point3 = {X_COORDINATES[i+2], Y_COORDINATES[i+2]};
-            if(doesIntersect(point1, point3, point2)){ continue; } // If the current set of points are not valid, skip to the next pass.
 
-            // If the points are valid, compute the angle between them.
-            // We achieve this by using the cosine rule b^2 = a^2 + c^2 - 2ac*cos(B) where B is the angle at the vertex and b is the opposing side. 
-            // Rearranged this gives the forumla B = arccos((a^2 + c^2 - b^2) / 2ac)
-            // In this case the opposing side will always be a line between points 1 and 3.
-            double a = distance(point1[0], point2[0], point1[1], point2[1]);
-            double b = distance(point1[0], point3[0], point1[1], point3[1]);
-            double c = distance(point3[0], point2[0], point3[1], point2[1]);
+        for (int i = 0; i < NUM_POINTS - 2; ++i) {
+            // get coordinates
+            double[] pointA = new double[]{X_COORDINATES[i], Y_COORDINATES[i]};
+            double[] vertex = new double[]{X_COORDINATES[i + 1], Y_COORDINATES[i + 1]};
+            double[] pointB = new double[]{X_COORDINATES[i + 2], Y_COORDINATES[i + 2]};
+            // check angle
+            if (checkAngle(pointA, pointB, vertex, EPSILON)) {
+                return true;
+            }
+        }     
 
-            // Now get the angle.
-            double B = getAngleInTriangle(b, a, c);
-
-            // Now we're checking the angle conditions.
-            if(B < (Math.PI-epsilon)){ return true; }
-            if(B > (Math.PI+epsilon)){ return true; }
-        }        
-
-        // Lastly return the result.
-        return LIC_2;
+        return false;
     }
 
     /**
@@ -288,42 +300,29 @@ public final class LIConditions {
      * @return LIC 3
      */
     private boolean LIC_3() {
-        boolean LIC_3 = false;   
 
-        // Get the area parameter.
-        double area1 = parameter.getAREA1();
+        // Get parameter
+        final double area1 = parameter.getAREA1();
 
-        // Start by checking for faulty input.
+        // Check for faulty parameters
         if (NUM_POINTS != X_COORDINATES.length || NUM_POINTS != Y_COORDINATES.length || area1 < 0) {
             return false;
         }
 
-        // The area in the non right triangle is computed by the formula area = 1/2 * bc*sin(A) where A, B and C are angles and a,b,c their opposing sides.
-        // Then iterate over all points...
-        for(int i=0; i < NUM_POINTS-2; i++){
-            // Store the points.
-            double[] pointA = {X_COORDINATES[i], Y_COORDINATES[i]};
-            double[] pointB = {X_COORDINATES[i+1], Y_COORDINATES[i+1]};
-            double[] pointC = {X_COORDINATES[i+2], Y_COORDINATES[i+2]};
+        for (int i = 0; i < NUM_POINTS - 2; i++){
+            
+            double triangleArea = 0.5 * Math.abs(
+                (X_COORDINATES[i] - X_COORDINATES[i + 2]) * (Y_COORDINATES[i + 1] - Y_COORDINATES[i])
+                    - (X_COORDINATES[i] - X_COORDINATES[i + 1]) * (Y_COORDINATES[i + 2] - Y_COORDINATES[i]));
 
-            // Find the distance between the points.
-            double a = distance(pointB[0], pointC[0], pointB[1], pointC[1]);
-            double b = distance(pointA[0], pointC[0], pointA[1], pointC[1]);
-            double c = distance(pointA[0], pointB[0], pointA[1], pointB[1]);
-
-            // Compute the angle A.
-            double A =  getAngleInTriangle(a, b, c);
-
-            // Compute the area of the triangle.
-            double area = getTriangleArea(b,c,A);
-
-            if(area > area1){
+            if (triangleArea > area1){
                 return true;
             }
 
         }
 
-        return LIC_3;
+        return false;
+
     }
 
     /**
@@ -332,17 +331,22 @@ public final class LIConditions {
      * @return LIC 4
      */
     private boolean LIC_4() {
+
+        // Get parameters
+        final int qPts = parameter.getQ_PTS();
+        final int QUADS = parameter.getQUADS();
+
         // Check for faulty parameters
-        if (parameter.getQ_PTS() < 2 || parameter.getQ_PTS() > NUM_POINTS || parameter.getQUADS() < 1 || parameter.getQUADS() > 3) {
+        if (qPts < 2 || qPts > NUM_POINTS || QUADS < 1 || QUADS > 3) {
             return false;
         }
 
         Set<Integer> quads = new HashSet<Integer> ();
-        for (int i = 0; i < NUM_POINTS - parameter.getQ_PTS(); i++) {
+        for (int i = 0; i < NUM_POINTS - qPts; i++) {
             
             // Calculate the number of quads from the set of points
             quads.clear();
-            for (int j = i; j < i + parameter.getQ_PTS(); j++) {
+            for (int j = i; j < i + qPts; j++) {
                 if (X_COORDINATES[j] >= 0 && Y_COORDINATES[j] >= 0) {
                     // First quadrant
                     quads.add(0);
@@ -358,12 +362,13 @@ public final class LIConditions {
                 }
             }
 
-            if (quads.size() > parameter.getQUADS()) {
+            if (quads.size() > QUADS) {
                 return true;
             }
         }
 
         return false;
+
     }
 
     /**
@@ -372,6 +377,7 @@ public final class LIConditions {
      * @return LIC 5
      */
     private boolean LIC_5() {
+
         for (int i = 0; i < NUM_POINTS-1; i++) {
             if (X_COORDINATES[i] > X_COORDINATES[i+1]) {
                 return true;
@@ -379,6 +385,7 @@ public final class LIConditions {
         }
 
         return false;
+
     }
 
     /**
@@ -389,17 +396,22 @@ public final class LIConditions {
      * @return LIC 6
      */
     private boolean LIC_6() {
-        int nPTS = parameter.getN_PTS();
-        double dist = parameter.getDIST();
+
+        // Get parameters
+        final int nPTS = parameter.getN_PTS();
+        final double dist = parameter.getDIST();
+
+        // Check for faulty parameters
         if (NUM_POINTS < 3 || nPTS < 3 || nPTS > NUM_POINTS || dist < 0) {
             return false;
         } 
 
         for (int i = 0; i < NUM_POINTS - (nPTS - 1); i++) {
+
             double p1[] = {X_COORDINATES[i],Y_COORDINATES[i]};
             double p2[] = {X_COORDINATES[i + nPTS - 1],Y_COORDINATES[i + nPTS - 1]};
 
-            double distToLine;
+            double distToLine = 0.0;
             for (int j = i; j < i + (nPTS - 1); j++) {
                // enpoints are the same point.
                if (doubleCompare(p1[0], p2[0]) == 0 && doubleCompare(p1[1], p2[1]) == 0) {
@@ -417,7 +429,9 @@ public final class LIConditions {
                }
             }
         }
+
         return false;
+
     }
 
     /**
@@ -426,13 +440,17 @@ public final class LIConditions {
      * @return LIC 7
      */
     private boolean LIC_7() {
-        int kPTS = parameter.getK_PTS();
-        double len1Squared = Math.pow(parameter.getLENGTH1(), 2);
 
+        // Get parameters
+        final int kPTS = parameter.getK_PTS();
+        final double len1Squared = Math.pow(parameter.getLENGTH1(), 2);
+
+        // Check for faulty parameters
         if (NUM_POINTS < 3 || kPTS < 1 || kPTS > NUM_POINTS - 2) {
             return false;
         }
-        double distSquared;
+
+        double distSquared = 0.0;
         for (int i = 0; i < NUM_POINTS - (kPTS + 1); i++) {
             distSquared = Math.pow(X_COORDINATES[i] - X_COORDINATES[i + kPTS + 1], 2)
                     + Math.pow(Y_COORDINATES[i] - Y_COORDINATES[i + kPTS + 1], 2);
@@ -441,7 +459,9 @@ public final class LIConditions {
                 return true;
             }
         }
+
         return false;
+
     }
 
     /**
@@ -451,21 +471,27 @@ public final class LIConditions {
      */
     private boolean LIC_8() {
 
+        // Get parameters
+        final int aPts = parameter.getA_PTS();
+        final int bPts = parameter.getB_PTS();
+        final double radius = parameter.getRADIUS1();
+
         // Check for faulty parameters
-        int aPts = parameter.getA_PTS();
-        int bPts = parameter.getB_PTS();
         if (NUM_POINTS < 5 || aPts + bPts > NUM_POINTS-3 || aPts < 1 || bPts < 1) {
             return false;
         }
 
-        double radius = parameter.getRADIUS1();
-        double x1 = 0;
-        double y1 = 0;
-        double x2 = 0;
-        double y2 = 0;
-        double x3 = 0;
-        double y3 = 0;
+        // declare variables
+        double x1 = 0.0;
+        double y1 = 0.0;
+        double x2 = 0.0;
+        double y2 = 0.0;
+        double x3 = 0.0;
+        double y3 = 0.0;
+
         for (int i = 0; i < NUM_POINTS - 2 - aPts - bPts; i++) {
+
+            // get coordinates
             x1 = X_COORDINATES[i];
             y1 = Y_COORDINATES[i];
             x2 = X_COORDINATES[i + aPts + 1];
@@ -473,45 +499,13 @@ public final class LIConditions {
             x3 = X_COORDINATES[i + aPts + bPts + 2];
             y3 = Y_COORDINATES[i + aPts + bPts + 2];
 
-            if (dist(x1, y1, x2, y2) > 2*radius || dist(x1, y1, x3, y3) > 2*radius || dist(x3, y3, x2, y2) > 2*radius) {
-                // The points are too far apart <--> they don't all fit in the circle
-                return true;
-            }
-
             // Angular sweep is used to determine whether the three points fit in a circle of radius RADIUS1: the circle is rotated around one of the points until all three points are enclosed
-            if (angleSweep(x1, y1, x2, y2, x3, y3, radius) && angleSweep(x2, y2, x1, y1, x3, y3, radius) && angleSweep(x3, y3, x1, y1, x2, y2, radius)) {
+            if (!angleSweep(x1, y1, x2, y2, x3, y3, radius) && !angleSweep(x2, y2, x1, y1, x3, y3, radius) && !angleSweep(x3, y3, x1, y1, x2, y2, radius)) {
                 return true;
             } 
         }
 
         return false;
-    }
-
-    private double dist(double x1, double y1, double x2, double y2) {
-        return Math.sqrt(Math.pow(x1-x2, 2)+Math.pow(y1-y2, 2));
-    }
-
-    // TODO: Add 2PI to negative angles.
-    private boolean angleSweep(double x1, double y1, double x2, double y2, double x3, double y3, double radius) {
-        // Calculate the angles for (x2, y2) at which it enters and exits the circle
-        double dist = dist(x1, y1, x2, y2);
-        double a = Math.atan2(y1-y2, x1-x2);
-        double b = Math.acos(dist/(2*radius));
-        double enter2 = a-b;
-        double exit2 = a+b;
-
-        // enter2 = enter2 < 0 ? enter2 + Math.PI*2 : enter2; 
-        // exit2 = exit2 < 0 ? exit2 + Math.PI*2 : exit2; 
-
-        // Calculate the angles for (x3, y3) at which it enters and exits the circle
-        dist = dist(x1, y1, x3, y3);
-        a = Math.atan2(y1-y3, x1-x3);
-        b = Math.acos(dist/(2*radius));
-        double enter3 = a-b;
-        double exit3 = a+b;
-
-
-        return !(enter2 < exit3 && enter3 < exit2);
     }
 
     /**
@@ -522,58 +516,24 @@ public final class LIConditions {
      */
     private boolean LIC_9() {
 
-        // retrieve constants
+        // Get parameters
         final double EPSILON = parameter.getEPSILON();
         final int C_PTS = parameter.getC_PTS();
         final int D_PTS = parameter.getD_PTS();
 
-        // check conditions
+        // Check for faulty parameters
         if (NUM_POINTS < 5 || 1 > C_PTS || 1 > D_PTS || (C_PTS + D_PTS) > (NUM_POINTS - 3)) {
             return false;
         }
 
-        // declare variables
-        double aX = 0.0;
-        double aY = 0.0;
-        double vertex_X = 0.0;
-        double vertex_Y = 0.0;
-        double bX = 0.0;
-        double bY = 0.0;
-        double vectA_X = 0.0;
-        double vectA_Y = 0.0;
-        double vectB_X = 0.0;
-        double vectB_Y = 0.0;
-        double angleA = 0.0;
-        double angleB = 0.0;
-        double angle = 0.0;
-
         for (int i = 0; i < NUM_POINTS - C_PTS - D_PTS - 2; ++i) {
             // get coordinates
-            // regarding the documentation, a is the first point, b is the third
-            aX = X_COORDINATES[i];
-            aY = Y_COORDINATES[i];
-            vertex_X = X_COORDINATES[i + C_PTS + 1];
-            vertex_Y = Y_COORDINATES[i + C_PTS + 1];
-            bX = X_COORDINATES[i + C_PTS + D_PTS + 2];
-            bY = Y_COORDINATES[i + C_PTS + D_PTS + 2];
-            // check condition that a =/= vertex and b =/= vertex
-            if ((aX != vertex_X || aY != vertex_Y) && (bX != vertex_X || bY != vertex_Y)) {
-                // compute the two vectors
-                vectA_X = vertex_X - aX;
-                vectA_Y = vertex_Y - aY;
-                vectB_X = vertex_X - bX;
-                vectB_Y = vertex_Y - bY;
-                // compute the two relative angles
-                angleA = Math.atan2(vectA_Y, vectA_X);
-                angleB = Math.atan2(vectB_Y, vectB_X);
-                // compute angle
-                angle = angleA - angleB;
-                // adjust it
-                angle = angle < 0 ? angle + 2 * PI : angle;
-                // check it
-                if (angle < PI - EPSILON || angle > PI + EPSILON) {
-                    return true;
-                }
+            double[] pointA = new double[]{X_COORDINATES[i], Y_COORDINATES[i]};
+            double[] vertex = new double[]{X_COORDINATES[i + C_PTS + 1], Y_COORDINATES[i + C_PTS + 1]};
+            double[] pointB = new double[]{X_COORDINATES[i + C_PTS + D_PTS + 2], Y_COORDINATES[i + C_PTS + D_PTS + 2]};
+            // check angle
+            if (checkAngle(pointA, pointB, vertex, EPSILON)) {
+                return true;
             }
         }
 
@@ -588,9 +548,13 @@ public final class LIConditions {
      * @return LIC 10
      */
     private boolean LIC_10() {
-        int ePTS = parameter.getE_PTS();
-        int fPTS = parameter.getF_PTS();
 
+        // Get parameters
+        final int ePTS = parameter.getE_PTS();
+        final int fPTS = parameter.getF_PTS();
+        final double area1 = parameter.getAREA1();
+
+        // Check for faulty parameters
         if (ePTS < 1 || fPTS < 1 || NUM_POINTS < 5
                      || ePTS + fPTS > NUM_POINTS - 3) {
             return false;
@@ -605,7 +569,7 @@ public final class LIConditions {
                     (X_COORDINATES[i] - X_COORDINATES[i + offset2]) * (Y_COORDINATES[i + offset1] - Y_COORDINATES[i])
                         - (X_COORDINATES[i] - X_COORDINATES[i + offset1]) * (Y_COORDINATES[i + offset2] - Y_COORDINATES[i]));
 
-            if (triangleArea > parameter.getAREA1()) {
+            if (triangleArea > area1) {
                 return true;
             }
         }
@@ -619,24 +583,24 @@ public final class LIConditions {
      * @return LIC 11
      */
     private boolean LIC_11() {
-        boolean LIC_11 = false;
 
-        int g_pts = parameter.getG_PTS();
+        // Get parameter
+        final int g_pts = parameter.getG_PTS();
 
-        // Start by checking for faulty input.
+        // Check for faulty parameters
         if (NUM_POINTS < 3 || g_pts < 1 || g_pts > NUM_POINTS - 2) {
             return false;
         }
 
         // Then iterate over all adequate points.
         // There needs to be at leat g_pts space between the last iterated over value and the last point.
-        for(int i = 0; i < NUM_POINTS - g_pts - 1; i++){
-            if(X_COORDINATES[i+g_pts+1] - X_COORDINATES[i] < 0)
+        for (int i = 0; i < NUM_POINTS - g_pts - 1; i++) {
+            if (X_COORDINATES[i + g_pts + 1] - X_COORDINATES[i] < 0)
                 return true;
         }
 
-        // Otherwise return false.
-        return LIC_11;
+        return false;
+
     }
 
     /**
@@ -645,18 +609,26 @@ public final class LIConditions {
      * @return LIC 12
      */
     private boolean LIC_12() {
+
+        // Get parameters
+        final double length1 = parameter.getLENGTH1();
+        final double length2 = parameter.getLENGTH2();
+        final int kPts = parameter.getK_PTS();
+        
         // Check for faulty parameters
-        if (NUM_POINTS < 3 || parameter.getLENGTH1() < 0 || parameter.getLENGTH2() < 0) {
+        if (NUM_POINTS < 3 || length1 < 0 || length2 < 0) {
             return false;
         }
 
-        double len1PowTwo = Math.pow(parameter.getLENGTH1(), 2);
-        double len2PowTwo = Math.pow(parameter.getLENGTH2(), 2);
-        int kPts = parameter.getK_PTS();
+        // declare variables
+        double len1PowTwo = Math.pow(length1, 2);
+        double len2PowTwo = Math.pow(length2, 2);
         boolean req1 = false;
         boolean req2 = false;
-        double distPowTwo = 0;
+        double distPowTwo = 0.0;
+
         for (int i = 0; i < NUM_POINTS - kPts - 1; i++) {
+
             distPowTwo = Math.pow(X_COORDINATES[i]-X_COORDINATES[i+kPts+1], 2)+Math.pow(Y_COORDINATES[i]-Y_COORDINATES[i+kPts+1], 2);
 
             if (distPowTwo > len1PowTwo) {
@@ -668,8 +640,11 @@ public final class LIConditions {
             if (req1 && req2) {
                 return true;
             }
+
         }
+
         return false;
+
     }
 
     /**
@@ -679,21 +654,26 @@ public final class LIConditions {
      * @return LIC 13
      */
     private boolean LIC_13() {
-        int A_PTS = parameter.getA_PTS();
-        int B_PTS = parameter.getB_PTS();
-        double rad1 = parameter.getRADIUS1();
-        double rad2 = parameter.getRADIUS2();
-        boolean subcond1 = false; // Cannot be contained in in a circle with the radius rad1.
-        boolean subcond2 = false; // Can be contained in a circle with the radius rad2.
 
-        if(NUM_POINTS < 5 || rad1 < 0 || rad2 < 0 || A_PTS < 0 || B_PTS < 0){
+        // Get parameters
+        final int A_PTS = parameter.getA_PTS();
+        final int B_PTS = parameter.getB_PTS();
+        final double rad1 = parameter.getRADIUS1();
+        final double rad2 = parameter.getRADIUS2();
+
+        // Check for faulty parameters
+        if (NUM_POINTS < 5 || rad1 < 0 || rad2 < 0 || A_PTS < 0 || B_PTS < 0) {
             return false;
         }
+
+        boolean subcond1 = false; // Cannot be contained in in a circle with the radius rad1.
+        boolean subcond2 = false; // Can be contained in a circle with the radius rad2.
 
         int offset1 = A_PTS + 1; // Offset from the first point to the second point.
         int offset2 = A_PTS + B_PTS + 2; // Offset from the first point to the third point.
 
-        for(int i = 0; i < NUM_POINTS - offset2; i++){
+        for (int i = 0; i < NUM_POINTS - offset2; i++){
+
             double x1 = X_COORDINATES[i];
             double x2 = X_COORDINATES[i+offset1];
             double x3 = X_COORDINATES[i+offset2];
@@ -702,27 +682,28 @@ public final class LIConditions {
             double y3 = Y_COORDINATES[i+offset2];
             
             // Checks if the point set cannot be contained winthin rad1. If not, the first subcond is met.
-            if(subcond1 == false){      
-                if (angleSweep(x1, y1, x2, y2, x3, y3, rad1) && angleSweep(x2, y2, x1, y1, x3, y3, rad1) && angleSweep(x3, y3, x1, y1, x2, y2, rad1)) {
+            if (subcond1 == false) {      
+                if (!angleSweep(x1, y1, x2, y2, x3, y3, rad1) && !angleSweep(x2, y2, x1, y1, x3, y3, rad1) && !angleSweep(x3, y3, x1, y1, x2, y2, rad1)) {
                     subcond1 = true;
                 } 
             }
 
             // Checks if the point set can be contained within rad2. If so, the second subcond is met.
-            if(subcond2 == false){
-                if (!angleSweep(x1, y1, x2, y2, x3, y3, rad2) || !angleSweep(x2, y2, x1, y1, x3, y3, rad2) || !angleSweep(x3, y3, x1, y1, x2, y2, rad2)) {
+            if (subcond2 == false) {
+                if (angleSweep(x1, y1, x2, y2, x3, y3, rad2) || angleSweep(x2, y2, x1, y1, x3, y3, rad2) || angleSweep(x3, y3, x1, y1, x2, y2, rad2)) {
                     subcond2 = true;
                 }               
             }
 
             // If both subconditions have been met, return true.
-            if(subcond1 && subcond2){
+            if (subcond1 && subcond2) {
                 return true;
             }
         }
 
         // If we get to this point both subconditions have not been met and thus we return false.
         return false;
+
     }
 
     /**
@@ -731,18 +712,22 @@ public final class LIConditions {
      * @return LIC 14
      */
     private boolean LIC_14() {
-        int ePTS = parameter.getE_PTS();
-        int fPTS = parameter.getF_PTS();
-        double area1 = parameter.getAREA1();
-        double area2 = parameter.getAREA2();
 
+        // Get parameters
+        final int ePTS = parameter.getE_PTS();
+        final int fPTS = parameter.getF_PTS();
+        final double area1 = parameter.getAREA1();
+        final double area2 = parameter.getAREA2();
+
+        // Check for faulty parameters
         if (NUM_POINTS < 5 || area2 < 0) {
             return false;
         }
+
         int offset1 = ePTS + 1; // offset from first point to second.
         int offset2 = ePTS + fPTS + 2; // offset from first point to thrid.
         boolean subcond1 = false, subcond2 = false;
-        double triangleArea;
+        double triangleArea = 0.0;
 
         for (int i = 0; i < NUM_POINTS - offset2; i++) {
             triangleArea = 0.5
@@ -763,6 +748,7 @@ public final class LIConditions {
                 return true;
             }
         }
+
         return false;
         
     }
